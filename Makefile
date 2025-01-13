@@ -13,3 +13,6 @@ build:
 		-o ./build/neocal \
 		-gcflags -m=2 \
 		./cmd/ 
+
+hub_update:
+	@hub_ctrl ${HUB_MODE} ln "$(realpath ./build/neocal)"
