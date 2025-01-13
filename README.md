@@ -1,7 +1,8 @@
 
-# A command-line cal
+# A command-line calendar
 
 Prints the current month with the current day highlighted.
+Similar to `cal`, `ncal`, etc.
 
 <p align="center">
   <img src="./resources/example.png" width="300"/>

@@ -1,6 +1,6 @@
 
 run:
-	go run ./cmd/cal.go
+	go run ./cmd/neocal.go
 
 test:
 	go test ./...
@@ -10,6 +10,6 @@ build:
 	rm -rf ./build/
 	mkdir -p ./build/
 	go build \
-		-o ./build/cal \
+		-o ./build/neocal \
 		-gcflags -m=2 \
 		./cmd/ 
