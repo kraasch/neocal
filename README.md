@@ -10,6 +10,7 @@ Similar to `cal`, `ncal`, etc.
 
 ## to-dos
 
+ - [ ] auto-update GUI when next day came.
  - [ ] extract the calendar array into the model.
  - [ ] make the model navigable via vim home row keys (hjkl).
    - [ ] go to next month when leaving left or right.
