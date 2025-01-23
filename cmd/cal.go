@@ -3,21 +3,21 @@ package main
 import (
 
   // other calculations.
-	// "math/rand"
-  
+  // "math/rand"
+
   // calendar's logic.
-	"time"
-  
+  "time"
+
   // command-line arguments.
-	"flag"
+  "flag"
 
   // print and exit.
-	"fmt"
-	"os"
+  "fmt"
+  "os"
 
   // for making a nice centred box.
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+  tea "github.com/charmbracelet/bubbletea"
+  "github.com/charmbracelet/lipgloss"
 )
 
 var (
@@ -26,22 +26,22 @@ var (
   bot_msg = "\nQuit (q), move (hjkl)."
   // styles.
   styleBox = lipgloss.NewStyle().
-    BorderStyle(lipgloss.NormalBorder()).
-    BorderForeground(lipgloss.Color("56"))
+  BorderStyle(lipgloss.NormalBorder()).
+  BorderForeground(lipgloss.Color("56"))
   styleToday = lipgloss.NewStyle().
-    Bold(true).
-    Foreground(lipgloss.Color("#FF0000"))
+  Bold(true).
+  Foreground(lipgloss.Color("#FF0000"))
   styleCursor = lipgloss.NewStyle().
-    Background(lipgloss.Color("#404040"))
+  Background(lipgloss.Color("#404040"))
   // flags.
   verbose = false
 )
 
 type model struct {
-	width    int
-	height   int
-	cursor_x int
-	cursor_y int
+  width    int
+  height   int
+  cursor_x int
+  cursor_y int
   day      string
   month    string
   year     string
@@ -85,15 +85,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // TODO: make this into a calendar array (within the model).
 func makeMonthGrid(year int, month time.Month, today int) string {
   s := ""
-	firstDay := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC) // Get the first day of the month.
-	lastDay := firstDay.AddDate(0, 1, -1) // Get the total number of days in the month.
-	s += fmt.Sprintln("Mo Tu We Th Fr Sa Su") // Add the header (day names).
-	// Print leading spaces for the first day.
-	for i := 0; i < int(firstDay.Weekday()); i++ {
-		s += "  "
-	}
-	// Print the days of the month
-	for day := 1; day <= lastDay.Day(); day++ {
+  firstDay := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC) // Get the first day of the month.
+  lastDay := firstDay.AddDate(0, 1, -1) // Get the total number of days in the month.
+  s += fmt.Sprintln("Mo Tu We Th Fr Sa Su") // Add the header (day names).
+  // Print leading spaces for the first day.
+  for i := 0; i < int(firstDay.Weekday()); i++ {
+    s += "  "
+  }
+  // Print the days of the month
+  for day := 1; day <= lastDay.Day(); day++ {
     if day == today {
       // TODO: add cursor formatting to current day formatting (ie fg and bg color).
       temp := fmt.Sprint(day)
@@ -101,31 +101,31 @@ func makeMonthGrid(year int, month time.Month, today int) string {
     } else {
       s += fmt.Sprintf("%2d ", day) // Print the day, formatted to fit in 2 characters.
     }
-		if (firstDay.Day()+day)%7 == 6 { // Move to the next line after 7 days.
-			s += fmt.Sprintln()
-		}
-	}
+    if (firstDay.Day()+day)%7 == 6 { // Move to the next line after 7 days.
+      s += fmt.Sprintln()
+    }
+  }
   // Return.
   return s
 }
 
 func (m model) View() string {
-	if m.width == 0 {
-		return ""
-	}
+  if m.width == 0 {
+    return ""
+  }
   r := top_msg + "\n"
   r += styleBox.Render(m.content)
   if verbose {
     r += bot_msg + "\n"
   }
-	return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, r)
+  return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, r)
 }
 
 func main() {
 
   // parse flags.
-	flag.BoolVar(&verbose, "verbose", false, "Show info")
-	flag.Parse()
+  flag.BoolVar(&verbose, "verbose", false, "Show info")
+  flag.Parse()
 
   // some stuff.
   currentTime := time.Now() // Get the current time
@@ -136,7 +136,7 @@ func main() {
   // init model.
   str := makeMonthGrid(int(currentTime.Year()), currentTime.Month(), int(currentTime.Day()))
   m := model{0, 0, 0, 0, day, month, year, str}
- 
+
   // init variables.
   top_msg = fmt.Sprintf("%s. %s, %s", day, month, year)
 
