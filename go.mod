@@ -1,4 +1,4 @@
-module neocal
+module github.com/kraasch/neocal
 
 go 1.18
 
