@@ -1,6 +1,6 @@
 
 run:
-	go run ./cmd/neocal.go
+	go run ./cmd/cal.go
 
 test:
 	go test ./...
