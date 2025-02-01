@@ -96,8 +96,9 @@ func makeMonthGrid(year int, month time.Month, today int) string {
   for day := 1; day <= lastDay.Day(); day++ {
     if day == today {
       // TODO: add cursor formatting to current day formatting (ie fg and bg color).
-      temp := fmt.Sprint(day)
-      s += fmt.Sprintf("%2s ", styleCursor.Render(styleToday.Render(temp)))
+      a := fmt.Sprint(day)
+      b := styleCursor.Render(styleToday.Render(a))
+      s += fmt.Sprintf("%2s ", b)
     } else {
       s += fmt.Sprintf("%2d ", day) // Print the day, formatted to fit in 2 characters.
     }

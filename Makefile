@@ -1,9 +1,9 @@
 
+test:
+	go test -v ./...
+
 run:
 	go run ./cmd/cal.go
-
-test:
-	go test ./...
 
 .PHONY: build
 build:
