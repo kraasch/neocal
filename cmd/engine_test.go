@@ -62,13 +62,6 @@ func TestAll(t *testing.T) {
   }
 }
 
-// import ("time")
-// parsedDate, err := time.Parse(layout, dateStr)
-//     if err != nil {
-//         fmt.Println("Error parsing date:", err)
-//         return
-//     }
-
 //   actualArrays := DateAsArrays()
 //   expectArrays := [][]string {
 //     { "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" },
