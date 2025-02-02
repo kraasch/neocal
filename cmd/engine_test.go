@@ -1,3 +1,4 @@
+
 package main
 
 import (
@@ -9,7 +10,7 @@ import (
   "fmt"
 
   // other imports.
-  //"strings"
+  // "strings"
 )
 
 var (
@@ -18,6 +19,7 @@ var (
 
 type TestList struct {
   testName          string
+  isMulti           bool
   inputArr          []string
   expectedValue     string
 }
@@ -40,29 +42,44 @@ var suites = []TestSuite{
   * Test for the function DateAsHeader().
   */
   {
+    functionUnderTest: 
     func(in ...string) (out string) {
       targetDate := in[0]
       out = DateAsHeader(targetDate)
       return
     },
+    tests: 
     []TestList{
-      {"date-1-digit-day+leading-space",    []string{"2025-02-01"}, " 1. February, 2025"},
-      {"date-2-digit-day+no-leading-space", []string{"2025-12-12"}, "12. December, 2025"},
+      {
+        testName:      "date-1-digit-day+leading-space",
+        isMulti:       false,
+        inputArr:      []string{"2025-02-01"},
+        expectedValue: " 1. February, 2025",
+      },
+      {
+        testName:      "date-2-digit-day+no-leading-space",
+        isMulti:       false,
+        inputArr:      []string{"2025-12-12"},
+        expectedValue: "12. December, 2025",
+      },
     },
   },
   /*
   * Test for the function MonthAsCalendar().
   */
   {
+    functionUnderTest: 
     func(in ...string) (out string) {
       targetDate    := in[0]
       formatCulture := in[1]
       out = MonthAsCalendar(targetDate, formatCulture)
       return
     },
+    tests: 
     []TestList{
       {
         testName:       "february-with-28-days",
+        isMulti:        true,
         inputArr:       []string{"2025-02", "eu"},
         expectedValue:
         "Mo Tu We Th Fr Sa Su" + NL +
@@ -74,6 +91,7 @@ var suites = []TestSuite{
       },
       {
         testName:       "february-with-28-days",
+        isMulti:        true,
         inputArr:       []string{"2025-02", "us"},
         expectedValue:
         "Su Mo Tu We Th Fr Sa" + NL +
@@ -94,7 +112,13 @@ func TestAll(t *testing.T) {
       exp := test.expectedValue
       got := suite.functionUnderTest(test.inputArr...)
       if exp != got {
-        t.Errorf("In '%s':\n  Exp: '%#v'\n  Got: '%#v'\n", name, exp, got)
+        if test.isMulti {
+          t.Errorf("In '%s':\n", name)
+          t.Errorf("   > '%s'\n", exp)
+          t.Errorf("   > '%s'\n", got)
+        } else {
+          t.Errorf("In '%s':\n  Exp: '%#v'\n  Got: '%#v'\n", name, exp, got)
+        }
       }
     }
   }

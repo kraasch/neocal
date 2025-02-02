@@ -1,6 +1,6 @@
 module github.com/kraasch/neocal
 
-go 1.18
+go 1.23.5
 
 require (
 	github.com/charmbracelet/bubbletea v1.2.4
