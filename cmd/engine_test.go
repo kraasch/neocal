@@ -56,7 +56,7 @@ func TestAll(t *testing.T) {
       exp := test.expectedString
       got := suite.functionUnderTest(test.inputString)
       if exp != got {
-        t.Errorf("In '%s': Exptected '%#v', got actually '%#v'.\n", name, exp, got)
+        t.Errorf("In '%s':\n  Exp: '%#v'\n  Got: '%#v'\n", name, exp, got)
       }
     }
   }
