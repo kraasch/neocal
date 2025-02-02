@@ -8,10 +8,10 @@ import (
 )
 
 const (
-  layout = "9999-99-99"
+  layout = "2006-01-02"
 )
 
-func DateAsHeader(targetDate string) (header string) {
+func DateAsHeader(targetDate string) (layouted string) {
   parsedDate, err := time.Parse(layout, targetDate)
   if err != nil {
       fmt.Println("Error parsing date:", err)
@@ -19,7 +19,10 @@ func DateAsHeader(targetDate string) (header string) {
   y := strconv.Itoa(parsedDate.Year())
   m := parsedDate.Month().String()
   d := strconv.Itoa(parsedDate.Day())
-  header = d + ". " + m + " " + y
+  if len(d) == 1 {
+    d = " " + d
+  }
+  layouted = d + ". " + m + ", " + y
   return
 }
 
