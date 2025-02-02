@@ -15,17 +15,6 @@ var (
   NL = fmt.Sprintln()
 )
 
-var suites = []TestSuite{
-  {
-    DateAsHeader,
-    []TestList{
-      {"Date 1 digit day, leading space",    "2025-02-01", " 1. February, 2025"},
-      {"Date 2 digit day, no leading space", "2025-12-12", "12. December, 2025"},
-    },
-  },
-}
-
-
 type TestList struct {
   testName          string
   inputString       string
@@ -37,12 +26,35 @@ type TestSuite struct {
   tests             []TestList
 }
 
+var suites = []TestSuite{
+  /*
+  * Test DateAsHeader.
+  */
+  {
+    DateAsHeader,
+    []TestList{
+      {"Date 1 digit day, leading space",    "2025-02-01", " 1. February, 2025"},
+      {"Date 2 digit day, no leading space", "2025-12-12", "12. December, 2025"},
+    },
+  },
+  /*
+  * Test DateAsHeader.
+  */
+  {
+    DateAsHeader,
+    []TestList{
+      {"Date 1 digit day, leading space",    "2025-02-01", " 1. February, 2025"},
+      {"Date 2 digit day, no leading space", "2025-12-12", "12. December, 2025"},
+    },
+  },
+}
+
 func TestAll(t *testing.T) {
   for _, suite := range suites {
     for _, test := range suite.tests {
       name := test.testName
       exp := test.expectedString
-      got := test.functionUnderTest(test.inputString)
+      got := suite.functionUnderTest(test.inputString)
       if exp != got {
         t.Errorf("In '%s': Exptected '%#v', got actually '%#v'.\n", name, exp, got)
       }
