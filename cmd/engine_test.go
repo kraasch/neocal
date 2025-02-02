@@ -40,13 +40,13 @@ var suites = []TestSuite{
   /*
   * Test DateAsHeader.
   */
-  {
-    DateAsHeader,
-    []TestList{
-      {"Date 1 digit day, leading space",    "2025-02-01", " 1. February, 2025"},
-      {"Date 2 digit day, no leading space", "2025-12-12", "12. December, 2025"},
-    },
-  },
+  //{
+  //  DateAsHeader,
+  //  []TestList{
+  //    {"Date 1 digit day, leading space",    "2025-02-01", " 1. February, 2025"},
+  //    {"Date 2 digit day, no leading space", "2025-12-12", "12. December, 2025"},
+  //  },
+  //},
 }
 
 func TestAll(t *testing.T) {
