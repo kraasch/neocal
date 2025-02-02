@@ -9,6 +9,7 @@ import (
   "fmt"
 
   // other imports.
+  //"strings"
 )
 
 var (
@@ -18,7 +19,7 @@ var (
 type TestList struct {
   testName          string
   inputString       string
-  expectedString    string
+  expectedValue     interface{}
 }
 
 type TestSuite struct {
@@ -54,7 +55,7 @@ var suites = []TestSuite{
       {
         testName:       "February with 28 days",
         inputString:    "2025-02",
-        expectedString:
+        expectedValue:
         "Mo Tu We Th Fr Sa Su" + NL +
         "       1  2  3  4  5" + NL +
         " 6  7  8  9 10 11 12" + NL +
@@ -70,7 +71,7 @@ func TestAll(t *testing.T) {
   for _, suite := range suites {
     for _, test := range suite.tests {
       name := test.testName
-      exp := test.expectedString
+      exp := test.expectedValue
       got := suite.functionUnderTest(test.inputString)
       if exp != got {
         t.Errorf("In '%s':\n  Exp: '%#v'\n  Got: '%#v'\n", name, exp, got)
@@ -79,13 +80,4 @@ func TestAll(t *testing.T) {
   }
 }
 
-//   actualArrays := MonthAsArrays
-//   expectArrays := [][]string {
-//     { "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" },
-//     { "  ", "  ", " 1", " 2", " 3", " 4", " 5" },
-//     { " 6", " 7", " 8", " 9", "10", "11", "12" },
-//     { "13", "14", "15", "16", "17", "18", "19" },
-//     { "20", "21", "22", "23", "24", "25", "26" },
-//     { "27", "28", "  ", "  ", "  ", "  ", "  " },
-//   }
 

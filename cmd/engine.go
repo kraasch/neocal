@@ -26,3 +26,7 @@ func DateAsHeader(targetDate string) (layouted string) {
   return
 }
 
+func MonthAsCalendar(targetDate string) (layouted string) {
+  return
+}
+
