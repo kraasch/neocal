@@ -26,7 +26,7 @@ func DateAsHeader(targetDate string) (layouted string) {
   return
 }
 
-func MonthAsCalendar(targetDate string) (layouted string) {
+func MonthAsCalendar(targetDate string, formatCulture string) (layouted string) {
   return
 }
 
