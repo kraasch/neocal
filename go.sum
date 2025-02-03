@@ -12,6 +12,8 @@ github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f h1:Y/CXytFA4m6
 github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f/go.mod h1:vw97MGsxSvLiUE2X8qFplwetxpGLQrlU1Q9AUEIzCaM=
 github.com/kraasch/godiff v0.1.6 h1:s22l4RFibqSOtFAyuiIySegpuLHgkFfCm7n6BOgUKBA=
 github.com/kraasch/godiff v0.1.6/go.mod h1:tURacXgakZUI1QqN33B5fTEBJfdDwUHoMbpHwrcRVr8=
+github.com/kraasch/godiff v0.1.7 h1:oCzQfWXvuYnLMKkx/BrPVdwqRVdoJVs7BIBRpg2UaO0=
+github.com/kraasch/godiff v0.1.7/go.mod h1:cZqJKwkygp9dxLzy/EHoFmrn1IpAephB/3Hb1NpGZsg=
 github.com/lucasb-eyer/go-colorful v1.2.0 h1:1nnpGOrhyZZuNyfu1QjKiUICQ74+3FNCN69Aj6K7nkY=
 github.com/lucasb-eyer/go-colorful v1.2.0/go.mod h1:R4dSotOR9KMtayYi1e77YzuveK+i7ruzyGqttikkLy0=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
