@@ -7,6 +7,16 @@ import (
   "strconv"
 )
 
+func parseYearAndMonth(in string) (out time.Time) {
+  const layout = "2006-01"
+  parsedDate, err := time.Parse(layout, in)
+  if err != nil {
+    fmt.Println("Error parsing date:", err)
+  }
+  out = parsedDate
+  return
+}
+
 func parseTime(in string) (out time.Time) {
   const layout = "2006-01-02"
   parsedDate, err := time.Parse(layout, in)
@@ -30,22 +40,32 @@ func DateAsHeader(targetDate string) (layouted string) {
 }
 
 func MonthAsCalendar(targetDate string, culture string) (s string) {
-  currentTime := time.Now() // Get the current time.
+
+  // Get the current time.
+  currentTime := parseYearAndMonth(targetDate)
+  // currentTime := time.Now()
   year := int(currentTime.Year())
-  // today  := int(currentTime.Day())
   month := currentTime.Month()
-  firstDay := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC) // Get the first day of the month.
-  lastDay := firstDay.AddDate(0, 1, -1) // Get the total number of days in the month.
+  // day0  := int(currentTime.Day())
+
+  // Get the first day of the month.
+  firstDay := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC)
+  // Get the total number of days in the month.
+  lastDay := firstDay.AddDate(0, 1, -1)
   // Add the header (day names).
   if culture == "us" {
     s += fmt.Sprintln("Su Mo Tu We Th Fr Sa")
+    // TODO: implement: shift SUN to MON.
   } else {
     s += fmt.Sprintln("Mo Tu We Th Fr Sa Su")
   }
+
   // Print leading spaces for the first day.
-  for i := 0; i < int(firstDay.Weekday()); i++ {
+  weekday := int(firstDay.Weekday())
+  for i := 0; i < weekday; i++ {
     s += "  "
   }
+
   // Print the days of the month.
   for day := 1; day <= lastDay.Day(); day++ {
     s += fmt.Sprintf("%2d ", day) // Print the day, formatted to fit in 2 characters.
@@ -53,6 +73,7 @@ func MonthAsCalendar(targetDate string, culture string) (s string) {
       s += fmt.Sprintln()
     }
   }
+
   return
 }
 
