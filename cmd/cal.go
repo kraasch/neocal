@@ -32,11 +32,6 @@ var (
   verbose = false
 )
 
-///// Add cursor formatting to current day formatting (ie fg and bg color).
-// styleToday = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF0000"))
-// styleCursor = lipgloss.NewStyle().Background(lipgloss.Color("#404040"))
-// str := styleCursor.Render(styleToday.Render("24")) // TODO: use.
-
 type model struct {
   width    int
   height   int
@@ -110,7 +105,7 @@ func main() {
   // init model.
   currentMonth := fmt.Sprintf("%s-%02d", year, monthNum)
   culture      := "eu"
-  str          := calengine.MonthAsCalendar(currentMonth, culture)
+  str          := calengine.CMonthAsCalendar(currentMonth, culture, day)
   m            := model{0, 0, 0, 0, day, month, year, str}
 
   // init variables.

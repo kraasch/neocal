@@ -7,6 +7,11 @@ import (
   "strconv"
 )
 
+const (
+  begFmt = "\x1b[1;38;2;255;0;0m"
+  endFmt = "\x1b[0m"
+)
+
 func parseYearAndMonth(in string) (out time.Time) {
   const layout = "2006-01"
   parsedDate, err := time.Parse(layout, in)
@@ -39,7 +44,20 @@ func DateAsHeader(targetDate string) (layouted string) {
   return
 }
 
-func MonthAsCalendar(targetDate string, culture string) (s string) {
+func MonthAsCalendar(targetDate string, culture string) string {
+  return CMonthAsCalendar(targetDate, culture, "")
+}
+
+func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) (s string) {
+
+  today := 0
+  if dayToHighlight != "" {
+    converted, err := strconv.Atoi(dayToHighlight)
+    if err != nil {
+      panic(err)
+    }
+    today = converted
+  }
 
   // Get the first day of the target month.
   firstDayDate := parseYearAndMonth(targetDate)
@@ -74,7 +92,13 @@ func MonthAsCalendar(targetDate string, culture string) (s string) {
 
   // Print the days of the month.
   for day := 1; day <= lastDay; day++ {
+    if day == today {
+      s += begFmt
+    }
     s += fmt.Sprintf(" %2d", day)
+    if day == today {
+      s += endFmt
+    }
     i := day - 1
     if (firstDay + i) % 7 == daysInFirstWeek {
       // Move to the next line after 7 days.
