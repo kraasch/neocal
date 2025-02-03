@@ -41,27 +41,36 @@ func DateAsHeader(targetDate string) (layouted string) {
 
 func MonthAsCalendar(targetDate string, culture string) (s string) {
 
-  // Get the current time.
-  currentTime := parseYearAndMonth(targetDate)
-  // currentTime := time.Now()
-  year := int(currentTime.Year())
-  month := currentTime.Month()
-  // day0  := int(currentTime.Day())
+  // Get the first day of the target month.
+  firstDay := parseYearAndMonth(targetDate)
 
-  // Get the first day of the month.
-  firstDay := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC)
   // Get the total number of days in the month.
   lastDay := firstDay.AddDate(0, 1, -1)
+
+  // Get the weekday of the first day in the month.
+  // US format, week starts with Sunday:
+  // 0=sun 1=mon 2=tue 3=wed 4=thu 5=fri 6=sat.
+  weekday := int(firstDay.Weekday())
+  if culture == "eu" {
+    // turn this: 0=sun 1=mon 2=tue 3=wed 4=thu 5=fri 6=sat 0=sun
+    // into this: 6=sun 0=mon 1=tue 2=wed 3=thu 4=fri 5=sat 6=sun
+    weekday = (weekday - 1) % 7
+  }
+
+  fmt.Println("firstDay:", firstDay)
+  fmt.Println("lastDay:", lastDay)
+  fmt.Println("weekday:", weekday)
+
   // Add the header (day names).
   if culture == "us" {
     s += fmt.Sprintln("Su Mo Tu We Th Fr Sa")
-    // TODO: implement: shift SUN to MON.
   } else {
     s += fmt.Sprintln("Mo Tu We Th Fr Sa Su")
   }
 
+  // TODO: implement: shift SUN to MON.
+
   // Print leading spaces for the first day.
-  weekday := int(firstDay.Weekday())
   for i := 0; i < weekday; i++ {
     s += "  "
   }
