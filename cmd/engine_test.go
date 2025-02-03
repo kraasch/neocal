@@ -88,7 +88,7 @@ var suites = []TestSuite{
         " 3  4  5  6  7  8  9" + NL +
         "10 11 12 13 14 15 16" + NL +
         "17 18 19 20 21 22 23" + NL +
-        "24 25 26 27 28      " + NL,
+        "24 25 26 27 28      ",
       },
       {
         testName:       "february-with-28-days_us_00",
@@ -100,7 +100,7 @@ var suites = []TestSuite{
         " 2  3  4  5  6  7  8" + NL +
         " 9 10 11 12 13 14 15" + NL +
         "16 17 18 19 20 21 22" + NL +
-        "23 24 25 26 27 28   " + NL,
+        "23 24 25 26 27 28   ",
       },
     },
   },
@@ -117,6 +117,7 @@ func TestAll(t *testing.T) {
           if test.isMulti {
             t.Errorf("In '%s':\n", name)
             diff := godiff.CDiff(exp, got)
+            t.Errorf("\nExp: '%#v'\nGot: '%#v'\n", exp, got)
             t.Errorf("exp/got:\n%s\n", diff)
           } else {
             t.Errorf("In '%s':\n  Exp: '%#v'\n  Got: '%#v'\n", name, exp, got)
