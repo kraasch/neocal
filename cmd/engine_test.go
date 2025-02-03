@@ -52,13 +52,13 @@ var suites = []TestSuite{
     tests: 
     []TestList{
       {
-        testName:      "date-1-digit-day+leading-space",
+        testName:      "date-1-digit-day+leading-space-00",
         isMulti:       false,
         inputArr:      []string{"2025-02-01"},
         expectedValue: " 1. February, 2025",
       },
       {
-        testName:      "date-2-digit-day+no-leading-space",
+        testName:      "date-2-digit-day+no-leading-space-00",
         isMulti:       false,
         inputArr:      []string{"2025-12-12"},
         expectedValue: "12. December, 2025",
@@ -79,7 +79,7 @@ var suites = []TestSuite{
     tests: 
     []TestList{
       {
-        testName:       "february-with-28-days",
+        testName:       "february-with-28-days+eu-00",
         isMulti:        true,
         inputArr:       []string{"2025-02", "eu"},
         expectedValue:
@@ -91,7 +91,7 @@ var suites = []TestSuite{
         "24 25 26 27 28      " + NL,
       },
       {
-        testName:       "february-with-28-days",
+        testName:       "february-with-28-days+us-00",
         isMulti:        true,
         inputArr:       []string{"2025-02", "us"},
         expectedValue:
@@ -124,5 +124,4 @@ func TestAll(t *testing.T) {
     }
   }
 }
-
 
