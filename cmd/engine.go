@@ -42,16 +42,17 @@ func DateAsHeader(targetDate string) (layouted string) {
 func MonthAsCalendar(targetDate string, culture string) (s string) {
 
   // Get the first day of the target month.
-  firstDay := parseYearAndMonth(targetDate)
+  firstDayDate := parseYearAndMonth(targetDate)
+  firstDay := firstDayDate.Day()
 
   // Get the total number of days in the month.
-  lastDayDate := firstDay.AddDate(0, 1, -1)
+  lastDayDate := firstDayDate.AddDate(0, 1, -1)
   lastDay := lastDayDate.Day()
 
   // Get the weekday of the first day in the month.
   // US format, week starts with Sunday:
   // 0=sun 1=mon 2=tue 3=wed 4=thu 5=fri 6=sat.
-  weekday := int(firstDay.Weekday())
+  weekday := int(firstDayDate.Weekday())
   if culture == "eu" {
     // turn this: 0=sun 1=mon 2=tue 3=wed 4=thu 5=fri 6=sat 0=sun
     // into this: 6=sun 0=mon 1=tue 2=wed 3=thu 4=fri 5=sat 6=sun
@@ -75,15 +76,11 @@ func MonthAsCalendar(targetDate string, culture string) (s string) {
   }
 
   // TODO: implement: shift SUN to MON.
-  start := 0
-  if culture == "eu" {
-    start = 1
-  }
 
   // Print the days of the month.
-  for day := start; day <= lastDay; day++ {
+  for day := 1; day <= lastDay; day++ {
     s += fmt.Sprintf("%2d ", day) // Print the day, formatted to fit in 2 characters.
-    if (firstDay.Day()+day)%7 == 6 { // Move to the next line after 7 days.
+    if (firstDay + day ) % 7 == 6 { // Move to the next line after 7 days.
       s += fmt.Sprintln()
     }
   }
