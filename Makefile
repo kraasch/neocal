@@ -1,6 +1,6 @@
 
 test:
-	go test ./... -run=.*/february-with-28-days+us-00
+	go test -v ./... -run=.*/february-with-28-days_us_00
 	@#go test -v ./...
 	@#go test ./...
 
