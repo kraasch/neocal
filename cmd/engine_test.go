@@ -52,13 +52,13 @@ var suites = []TestSuite{
     tests: 
     []TestList{
       {
-        testName:      "date-1-digit-day+leading-space-00",
+        testName:      "date-1-digit-day_leading-space_00",
         isMulti:       false,
         inputArr:      []string{"2025-02-01"},
         expectedValue: " 1. February, 2025",
       },
       {
-        testName:      "date-2-digit-day+no-leading-space-00",
+        testName:      "date-2-digit-day_no-leading-space_00",
         isMulti:       false,
         inputArr:      []string{"2025-12-12"},
         expectedValue: "12. December, 2025",
@@ -79,7 +79,7 @@ var suites = []TestSuite{
     tests: 
     []TestList{
       {
-        testName:       "february-with-28-days+eu-00",
+        testName:       "february-with-28-days_eu_00",
         isMulti:        true,
         inputArr:       []string{"2025-02", "eu"},
         expectedValue:
@@ -91,7 +91,7 @@ var suites = []TestSuite{
         "24 25 26 27 28      " + NL,
       },
       {
-        testName:       "february-with-28-days+us-00",
+        testName:       "february-with-28-days_us_00",
         isMulti:        true,
         inputArr:       []string{"2025-02", "us"},
         expectedValue:
@@ -110,17 +110,19 @@ func TestAll(t *testing.T) {
   for _, suite := range suites {
     for _, test := range suite.tests {
       name := test.testName
-      exp := test.expectedValue
-      got := suite.functionUnderTest(test.inputArr...)
-      if exp != got {
-        if test.isMulti {
-          t.Errorf("In '%s':\n", name)
-          diff := godiff.CDiff(exp, got)
-          t.Errorf("exp/got:\n%s\n", diff)
-        } else {
-          t.Errorf("In '%s':\n  Exp: '%#v'\n  Got: '%#v'\n", name, exp, got)
+      t.Run(name, func(t *testing.T) {
+        exp := test.expectedValue
+        got := suite.functionUnderTest(test.inputArr...)
+        if exp != got {
+          if test.isMulti {
+            t.Errorf("In '%s':\n", name)
+            diff := godiff.CDiff(exp, got)
+            t.Errorf("exp/got:\n%s\n", diff)
+          } else {
+            t.Errorf("In '%s':\n  Exp: '%#v'\n  Got: '%#v'\n", name, exp, got)
+          }
         }
-      }
+      })
     }
   }
 }
