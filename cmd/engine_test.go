@@ -115,7 +115,7 @@ func TestAll(t *testing.T) {
       if exp != got {
         if test.isMulti {
           t.Errorf("In '%s':\n", name)
-          diff := godiff.Diff(exp, got)
+          diff := godiff.CDiff(exp, got)
           t.Errorf("exp/got:\n%s\n", diff)
         } else {
           t.Errorf("In '%s':\n  Exp: '%#v'\n  Got: '%#v'\n", name, exp, got)
