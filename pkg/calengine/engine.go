@@ -61,9 +61,9 @@ func MonthAsCalendar(targetDate string, culture string) (s string) {
 
   // Add the header (day names).
   if culture == "us" {
-    s += fmt.Sprintln(" Su Mo Tu We Th Fr Sa")
+    s += fmt.Sprintln(" Su Mo Tu We Th Fr Sa ")
   } else {
-    s += fmt.Sprintln(" Mo Tu We Th Fr Sa Su")
+    s += fmt.Sprintln(" Mo Tu We Th Fr Sa Su ")
   }
 
   // Print leading spaces for the
@@ -78,6 +78,7 @@ func MonthAsCalendar(targetDate string, culture string) (s string) {
     i := day - 1
     if (firstDay + i) % 7 == daysInFirstWeek {
       // Move to the next line after 7 days.
+      s += " " // Add right side padding.
       s += fmt.Sprintln()
     }
   }
@@ -86,6 +87,7 @@ func MonthAsCalendar(targetDate string, culture string) (s string) {
   for i := 0; i < (7 - weekday); i++ {
     s += "   "
   }
+  s += " " // Add right side padding.
 
   return
 }

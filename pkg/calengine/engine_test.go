@@ -83,24 +83,24 @@ var suites = []TestSuite{
         isMulti:        true,
         inputArr:       []string{"2025-02", "eu"},
         expectedValue:
-        " Mo Tu We Th Fr Sa Su" + NL +
-        "                 1  2" + NL +
-        "  3  4  5  6  7  8  9" + NL +
-        " 10 11 12 13 14 15 16" + NL +
-        " 17 18 19 20 21 22 23" + NL +
-        " 24 25 26 27 28      ",
+        " Mo Tu We Th Fr Sa Su " + NL +
+        "                 1  2 " + NL +
+        "  3  4  5  6  7  8  9 " + NL +
+        " 10 11 12 13 14 15 16 " + NL +
+        " 17 18 19 20 21 22 23 " + NL +
+        " 24 25 26 27 28       ",
       },
       {
         testName:       "february-with-28-days_us_00",
         isMulti:        true,
         inputArr:       []string{"2025-02", "us"},
         expectedValue:
-        " Su Mo Tu We Th Fr Sa" + NL +
-        "                    1" + NL +
-        "  2  3  4  5  6  7  8" + NL +
-        "  9 10 11 12 13 14 15" + NL +
-        " 16 17 18 19 20 21 22" + NL +
-        " 23 24 25 26 27 28   ",
+        " Su Mo Tu We Th Fr Sa " + NL +
+        "                    1 " + NL +
+        "  2  3  4  5  6  7  8 " + NL +
+        "  9 10 11 12 13 14 15 " + NL +
+        " 16 17 18 19 20 21 22 " + NL +
+        " 23 24 25 26 27 28    ",
       },
     },
   },
