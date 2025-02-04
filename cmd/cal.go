@@ -99,4 +99,7 @@ func main() {
     os.Exit(1)
   }
 
+  // print the last highlighted value in calendar to stdout.
+  defer fmt.Println(m.c.ReadDate())
+
 } // fin.

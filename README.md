@@ -10,7 +10,6 @@ Similar to `cal`, `ncal`, etc.
 
 ## to-dos
 
- - [ ] make main return a date string (format: time.DateOnly, ie '2006-01-02').
  - [ ] test for negative years, eg year -1 (do not let user navigate into pre-historic past).
  - [ ] test for 5-digit years, eg year 10000 (do not let user navigate in post-historic future).
  - [ ] auto-update GUI when next day came.
@@ -30,6 +29,7 @@ Later/maybe:
 
 ## done
 
+ - [X] make main return a date string (format: time.DateOnly, ie '2006-01-02').
  - [X] make the model navigable via vim home row keys (hjkl).
    - [X] go to next month when leaving left or right.
 
