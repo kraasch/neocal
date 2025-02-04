@@ -90,8 +90,6 @@ func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) 
     s += fmt.Sprintln(" Mo Tu We Th Fr Sa Su ")
   }
 
-  fmt.Println("HERE WE ARE:", weekday)
-
   // Print leading spaces for the
   for i := 0; i < weekday; i++ {
     s += "   "
