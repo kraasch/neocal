@@ -79,9 +79,9 @@ var suites = []TestSuite{
     tests: 
     []TestList{
       {
-        testName:       "february-with-28-days_eu_00",
+        testName:       "calendar_eu_week-starts-mid_00",
         isMulti:        true,
-        inputArr:       []string{"2025-02", "eu"},
+        inputArr:       []string{"2025-02", "eu"}, // start month with middle of week.
         expectedValue:
         " Mo Tu We Th Fr Sa Su " + NL +
         "                 1  2 " + NL +
@@ -91,7 +91,7 @@ var suites = []TestSuite{
         " 24 25 26 27 28       ",
       },
       {
-        testName:       "february-with-28-days_eu_01",
+        testName:       "calendar_eu_week-starts-mon_00", // start month with first day of week.
         isMulti:        true,
         inputArr:       []string{"2003-09", "eu"},
         expectedValue:
@@ -102,20 +102,45 @@ var suites = []TestSuite{
         " 22 23 24 25 26 27 28 " + NL +
         " 29 30                ",
       },
-      //{
-      //  testName:       "february-with-28-days_eu_02",
-      //  isMulti:        true,
-      //  inputArr:       []string{"xxx", "eu"},
-      //  expectedValue:
-      //  "  " + NL +
-      //  "  " + NL +
-      //  "  " + NL +
-      //  "  " + NL +
-      //  "  " + NL +
-      //  "  ",
-      //},
       {
-        testName:       "february-with-28-days_us_00",
+        testName:       "calendar_eu_week-starts-sun_00", // start month with last day of week.
+        isMulti:        true,
+        inputArr:       []string{"2024-12", "eu"},
+        expectedValue:
+        " Mo Tu We Th Fr Sa Su " + NL +
+        "                    1 " + NL +
+        "  2  3  4  5  6  7  8 " + NL +
+        "  9 10 11 12 13 14 15 " + NL +
+        " 16 17 18 19 20 21 22 " + NL +
+        " 23 24 25 26 27 28 29 " + NL +
+        " 30 31                ",
+      },
+      {
+        testName:       "calendar_us_week-starts-mid_00", // start month with middle of week.
+        isMulti:        true,
+        inputArr:       []string{"2030-01", "us"},
+        expectedValue:
+        " Su Mo Tu We Th Fr Sa " + NL +
+        "        1  2  3  4  5 " + NL +
+        "  6  7  8  9 10 11 12 " + NL +
+        " 13 14 15 16 17 18 19 " + NL +
+        " 20 21 22 23 24 25 26 " + NL +
+        " 27 28 29 30 31       ",
+      },
+      {
+        testName:       "calendar_us_week-starts-sun_00", // start month with first day of week.
+        isMulti:        true,
+        inputArr:       []string{"2024-12", "us"},
+        expectedValue:
+        " Su Mo Tu We Th Fr Sa " + NL +
+        "  1  2  3  4  5  6  7 " + NL +
+        "  8  9 10 11 12 13 14 " + NL +
+        " 15 16 17 18 19 20 21 " + NL +
+        " 22 23 24 25 26 27 28 " + NL +
+        " 29 30 31             ",
+      },
+      {
+        testName:       "calendar_us_week-starts-sat_00", // start month with last day of week.
         isMulti:        true,
         inputArr:       []string{"2025-02", "us"},
         expectedValue:

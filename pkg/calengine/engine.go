@@ -66,6 +66,12 @@ func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) 
   // Get the total number of days in the month.
   lastDayDate := firstDayDate.AddDate(0, 1, -1)
   lastDay := lastDayDate.Day()
+  lastWeekday := int(lastDayDate.Weekday())
+  if culture == "us" {
+    // turn EU format: 6=sun 0=mon 1=tue 2=wed 3=thu 4=fri 5=sat 6=sun
+    // into US format: 0=sun 1=mon 2=tue 3=wed 4=thu 5=fri 6=sat 0=sun
+    lastWeekday = (lastWeekday + 1) % 7
+  }
 
   // Get the weekday of the first day in the month.
   // US format, week starts with Sunday:
@@ -74,7 +80,7 @@ func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) 
   if culture == "eu" {
     // turn US format: 0=sun 1=mon 2=tue 3=wed 4=thu 5=fri 6=sat 0=sun
     // into EU format: 6=sun 0=mon 1=tue 2=wed 3=thu 4=fri 5=sat 6=sun
-    weekday = (weekday - 1) % 7
+    weekday = (weekday + 6) % 7
   }
 
   // Add the header (day names).
@@ -84,11 +90,13 @@ func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) 
     s += fmt.Sprintln(" Mo Tu We Th Fr Sa Su ")
   }
 
+  fmt.Println("HERE WE ARE:", weekday)
+
   // Print leading spaces for the
   for i := 0; i < weekday; i++ {
     s += "   "
   }
-  daysInFirstWeek := 7 - weekday
+  daysInFirstWeek := (7 - weekday) % 7
 
   // Print the days of the month.
   for day := 1; day <= lastDay; day++ {
@@ -108,7 +116,7 @@ func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) 
   }
 
   // Print trailing spaces.
-  for i := 0; i < (7 - weekday); i++ {
+  for i := lastWeekday; i < 7; i++ {
     s += "   "
   }
   s += " " // Add right side padding.
