@@ -2,50 +2,39 @@
 package main
 
 import (
-
-  // local packages.
-  "github.com/kraasch/neocal/pkg/calengine"
+  // for making a nice centred box.
+  tea "github.com/charmbracelet/bubbletea"
+  lip "github.com/charmbracelet/lipgloss"
 
   // basics.
   "fmt"
   "os"
   "flag"
 
-  // calculations.
-  "time"
-  // "math/rand"
-
-  // for making a nice centred box.
-  tea "github.com/charmbracelet/bubbletea"
-  "github.com/charmbracelet/lipgloss"
+  // local packages.
+  engine "github.com/kraasch/neocal/pkg/calengine"
+  ctrl "github.com/kraasch/neocal/pkg/calcontroller"
 )
 
 var (
-  // strings.
-  top_msg = ""
-  bot_msg = "\nQuit (q), move (hjkl)."
-  // styles.
-  styleBox = lipgloss.NewStyle().
-  BorderStyle(lipgloss.NormalBorder()).
-  BorderForeground(lipgloss.Color("56"))
   // flags.
   verbose = false
+  // styles.
+  styleBox = lip.NewStyle().
+    BorderStyle(lip.NormalBorder()).
+    BorderForeground(lip.Color("56"))
 )
 
 type model struct {
   width    int
   height   int
-  cursor_x int
-  cursor_y int
-  day      string
-  month    string
-  year     string
-  content  string
+  c        ctrl.Controller
 }
 
-func (m model) Init() tea.Cmd { return func() tea.Msg { return nil } }
+func (m model) Init() tea.Cmd {
+  return func() tea.Msg { return nil }
+}
 
-// TODO: navigate the fields of the calendar array (within the model).
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
   var cmd tea.Cmd
   switch msg := msg.(type) {
@@ -54,22 +43,22 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     m.height = msg.Height
   case tea.KeyMsg:
     switch msg.String() {
-      case "h", "left": // move left.
-      if m.cursor_x > 0 {
-        m.cursor_x--
-      }
-      case "l", "right": // move right.
-      if m.cursor_x < 4 {
-        m.cursor_x++
-      }
-      case "k", "up": // move up.
-      if m.cursor_y > 0 {
-        m.cursor_y--
-      }
-      case "j", "down": // move down.
-      if m.cursor_y < 4 {
-        m.cursor_y++
-      }
+    case "h", "left":
+      m.c.Control("prev", "day")
+    case "l", "right":
+      m.c.Control("next", "day")
+    case "k", "up":
+      m.c.Control("prev", "week")
+    case "j", "down":
+      m.c.Control("next", "week")
+    case "K", "space":
+      m.c.Control("prev", "month")
+    case "J", "backpace":
+      m.c.Control("next", "month")
+    case "H", "pgup":
+      m.c.Control("prev", "year")
+    case "L", "pgdown":
+      m.c.Control("next", "year")
     case "q":
       return m, tea.Quit
     }
@@ -81,12 +70,14 @@ func (m model) View() string {
   if m.width == 0 {
     return ""
   }
-  r := top_msg + "\n"
-  r += styleBox.Render(m.content)
+  r   := m.c.ReadDateHuman() + "\n"
+  str := engine.CMonthAsCalendar(m.c.ReadDateYM(), "eu", m.c.ReadDateD())
+  r   += styleBox.Render(str)
   if verbose {
-    r += bot_msg + "\n"
+    bottomMsg := "\nQuit (q), move (hjkl)."
+    r += bottomMsg + "\n"
   }
-  return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, r)
+  return lip.Place(m.width, m.height, lip.Center, lip.Center, r)
 }
 
 func main() {
@@ -95,21 +86,12 @@ func main() {
   flag.BoolVar(&verbose, "verbose", false, "Show info")
   flag.Parse()
 
-  // some stuff.
-  currentTime := time.Now() // Get the current time
-  monthNum := int(currentTime.Month())
-  month    := fmt.Sprint(currentTime.Month())
-  year     := fmt.Sprint(currentTime.Year())
-  day      := fmt.Sprint(currentTime.Day())
-
   // init model.
-  currentMonth := fmt.Sprintf("%s-%02d", year, monthNum)
-  culture      := "eu"
-  str          := calengine.CMonthAsCalendar(currentMonth, culture, day)
-  m            := model{0, 0, 0, 0, day, month, year, str}
-
-  // init variables.
-  top_msg = fmt.Sprintf("%s. %s, %s", day, month, year)
+  cal, ok := ctrl.NewCalNow()
+  if !ok {
+    return
+  }
+  m := model{0, 0, cal}
 
   // start bubbletea.
   if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {

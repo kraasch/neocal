@@ -3,10 +3,16 @@ package calcontroller
 
 import (
   "time"
+  "fmt"
 )
 
 type Controller struct {
   cal time.Time
+}
+
+func NewCalNow() (c Controller, ok bool) {
+  ok = c.SetDate(time.Now().Format(time.DateOnly))
+  return
 }
 
 func (c *Controller) SetDate(in string) (ok bool) {
@@ -59,4 +65,24 @@ func (c *Controller) ReadDate() (out string) {
   out = c.cal.Format(time.DateOnly)
   return
 }
+
+func (c *Controller) ReadDateYM() (out string) {
+  out = c.ReadDate()[:7]
+  return
+}
+
+func (c *Controller) ReadDateD() (out string) {
+  str := c.ReadDate()
+  out = str[len(str)-2:]
+  return
+}
+
+func (c *Controller) ReadDateHuman() (out string) {
+  month := fmt.Sprint(c.cal.Month())
+  year  := fmt.Sprint(c.cal.Year())
+  day   := fmt.Sprint(c.cal.Day())
+  out    = fmt.Sprintf("%s. %s, %s", day, month, year)
+  return
+}
+
 

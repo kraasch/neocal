@@ -43,7 +43,7 @@ var suites = []TestSuite{
   * Test for the function DateAsHeader().
   */
   {
-    functionUnderTest: 
+    functionUnderTest:
     func(in ...string) (out string) {
       targetDate := in[0]
       out = DateAsHeader(targetDate)
@@ -69,7 +69,7 @@ var suites = []TestSuite{
   * Test for the function MonthAsCalendar().
   */
   {
-    functionUnderTest: 
+    functionUnderTest:
     func(in ...string) (out string) {
       targetDate    := in[0]
       formatCulture := in[1]
@@ -108,7 +108,7 @@ var suites = []TestSuite{
   * Test for the function MonthAsCalendar().
   */
   {
-    functionUnderTest: 
+    functionUnderTest:
     func(in ...string) (out string) {
       targetDate    := in[0]
       formatCulture := in[1]

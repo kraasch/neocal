@@ -26,10 +26,115 @@ type TestSuite struct {
 
 var suites = []TestSuite{
   /*
-  * Test for the function DateAsHeader().
+  * Test for the function ReadDateHuman().
   */
   {
-    functionUnderTest: 
+    functionUnderTest:
+    func(setDate string, in ...string) string {
+      c := Controller{}
+      c.SetDate(setDate)
+      return c.ReadDateHuman()
+    },
+    tests:
+    []TestList{
+      {
+        testName:      "controller_next_00",
+        isMulti:       false,
+        initialValue:  "2025-02-04",
+        inputArr:      nil,
+        expectedValue: "4. February, 2025",
+      },
+      {
+        testName:      "controller_next_00",
+        isMulti:       false,
+        initialValue:  "2000-01-31",
+        inputArr:      nil,
+        expectedValue: "31. January, 2000",
+      },
+      {
+        testName:      "controller_next_00",
+        isMulti:       false,
+        initialValue:  "0290-01-31",
+        inputArr:      nil,
+        expectedValue: "31. January, 290",
+      },
+    },
+  },
+  /*
+  * Test for the function ReadDateD().
+  */
+  {
+    functionUnderTest:
+    func(setDate string, in ...string) string {
+      c := Controller{}
+      ok := c.SetDate(setDate)
+      if ok {
+        action := ""
+        for i, val := range in {
+          unit := val // 2nd loop: treat val as unit.
+          if i % 2 == 1 { // only trigger every 2nd loop.
+            c.Control(action, unit)
+          }
+          action = val // 2nd loop + 1: treat val as new action for next loop.
+        }
+      }
+      return c.ReadDateD()
+    },
+    tests:
+    []TestList{
+      {
+        testName:      "controller_next_00",
+        isMulti:       false,
+        initialValue:  "2025-01-04",
+        inputArr:      []string{
+          "next", "day",
+          "next", "year",
+          "prev", "month",
+        },
+        expectedValue: "05",
+      },
+    },
+  },
+  /*
+  * Test for the function ReadDateYM().
+  */
+  {
+    functionUnderTest:
+    func(setDate string, in ...string) string {
+      c := Controller{}
+      ok := c.SetDate(setDate)
+      if ok {
+        action := ""
+        for i, val := range in {
+          unit := val // 2nd loop: treat val as unit.
+          if i % 2 == 1 { // only trigger every 2nd loop.
+            c.Control(action, unit)
+          }
+          action = val // 2nd loop + 1: treat val as new action for next loop.
+        }
+      }
+      return c.ReadDateYM()
+    },
+    tests:
+    []TestList{
+      {
+        testName:      "controller_next_00",
+        isMulti:       false,
+        initialValue:  "2025-01-04",
+        inputArr:      []string{
+          "next", "day",
+          "next", "year",
+          "prev", "month",
+        },
+        expectedValue: "2025-12",
+      },
+    },
+  },
+  /*
+  * Test for creating and manipulating dates with Controller.
+  */
+  {
+    functionUnderTest:
     func(setDate string, in ...string) string {
       c := Controller{}
       ok := c.SetDate(setDate)
