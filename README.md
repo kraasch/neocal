@@ -10,10 +10,10 @@ Similar to `cal`, `ncal`, etc.
 
 ## to-dos
 
+ - [ ] test for negative years, eg year -1 (do not let user navigate into pre-historic past).
+ - [ ] test for 5-digit years, eg year 10000 (do not let user navigate in post-historic future).
  - [ ] auto-update GUI when next day came.
  - [ ] extract the calendar array into the model.
- - [ ] make the model navigable via vim home row keys (hjkl).
-   - [ ] go to next month when leaving left or right.
 
 Later/maybe:
 
@@ -26,6 +26,11 @@ Later/maybe:
    - [ ] show script events on days (eg blue font highlight).
    - [ ] activate script events with special key (eg enter/space).
    - [ ] run the associated script.
+
+## done
+
+ - [X] make the model navigable via vim home row keys (hjkl).
+   - [X] go to next month when leaving left or right.
 
 ## misc info
 
