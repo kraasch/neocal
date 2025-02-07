@@ -104,7 +104,7 @@ func main() {
   }
 
   // print the last highlighted value in calendar to stdout.
-  defer fmt.Println(m.startDate)
+  defer fmt.Println(m.c.ReadDate()) // TODO: fix me.
 
 } // fin.
 
