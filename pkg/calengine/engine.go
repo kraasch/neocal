@@ -8,8 +8,15 @@ import (
 )
 
 const (
-  begFmt = "\x1b[1;38;2;255;0;0m"
-  endFmt = "\x1b[0m"
+  F1 = "\x1b[1;38;2;255;0;0m" // ANSI foreground color (text = red).
+  F2 = "\x1b[38;5;56m"        // ANSI foreground color (boxes = purple).
+  N0 = "\x1b[0m"              // ANSI clear formatting.
+  TL = "┌" // top left corner.
+  TR = "┐" // top right corner.
+  BL = "└" // bottom left corner.
+  BR = "┘" // bottom right corner.
+  HO = "─" // horizontal line.
+  VE = "│" // vertical line.
 )
 
 func parseYearAndMonth(in string) (out time.Time) {
@@ -99,11 +106,11 @@ func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) 
   // Print the days of the month.
   for day := 1; day <= lastDay; day++ {
     if day == today {
-      s += begFmt
+      s += F1
     }
     s += fmt.Sprintf(" %2d", day)
     if day == today {
-      s += endFmt
+      s += N0
     }
     i := day - 1
     if (firstDay + i) % 7 == daysInFirstWeek {
