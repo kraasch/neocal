@@ -73,18 +73,28 @@ func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToB
   return HlMonthAsCalendar(targetDate, culture, daysToHl, hls)
 }
 
-// highlight days in month (with explicity highlights).
-func HlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string) (s string) {
-
-  dayToHighlight := daysToHl[0]
-  today := 0
+func format(day int, dayToHighlight string, highlight string) (s string) {
+  theDay := 0
   if dayToHighlight != "" {
     converted, err := strconv.Atoi(dayToHighlight)
     if err != nil {
       panic(err)
     }
-    today = converted
+    theDay = converted
   }
+
+  if day == theDay {
+    s += highlight
+  }
+  s += fmt.Sprintf(" %2d", day)
+  if day == theDay {
+    s += N0
+  }
+  return
+}
+
+// highlight days in month (with explicity highlights).
+func HlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string) (s string) {
 
   // Get the first day of the target month.
   firstDayDate := parseYearAndMonth(targetDate)
@@ -125,13 +135,7 @@ func HlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
 
   // Print the days of the month.
   for day := 1; day <= lastDay; day++ {
-    if day == today {
-      s += F1
-    }
-    s += fmt.Sprintf(" %2d", day)
-    if day == today {
-      s += N0
-    }
+    s += format(day, daysToHl[0], F1)
     i := day - 1
     if (firstDay + i) % 7 == daysInFirstWeek {
       // Move to the next line after 7 days.
