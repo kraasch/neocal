@@ -7,7 +7,8 @@ import (
 )
 
 type Controller struct {
-  cal time.Time
+  cal      time.Time
+  startCal time.Time
 }
 
 func NewCalNow() (c Controller, ok bool) {
@@ -18,6 +19,7 @@ func NewCalNow() (c Controller, ok bool) {
 func (c *Controller) SetDate(in string) (ok bool) {
   t, err := time.Parse(time.DateOnly, in)
   c.cal = t
+  c.startCal = t
   if err == nil {
     ok = true
   }
@@ -26,6 +28,12 @@ func (c *Controller) SetDate(in string) (ok bool) {
 
 func (c *Controller) Control(action string, unit string) (ok bool) {
   ok = true // default to true.
+
+  // interpret special actions and units first.
+  if action == "go" && unit == "start" {
+    c.cal = c.startCal
+    return
+  }
 
   // evaluate action.
   dir := 0

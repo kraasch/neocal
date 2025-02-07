@@ -313,6 +313,21 @@ var suites = []TestSuite{
         },
         expectedValue: "1999-11-30",
       },
+      {
+        testName:      "controller_go-start-cmd_00",
+        isMulti:       false,
+        initialValue:  "2000-01-01",
+        inputArr:      []string{
+          "prev", "month",
+          "prev", "month",
+          "prev", "year",
+          "prev", "month",
+          "prev", "month",
+          "prev", "day",
+          "go",   "start",
+        },
+        expectedValue: "2000-01-01",
+      },
     },
   },
 }

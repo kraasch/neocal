@@ -44,6 +44,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     m.height = msg.Height
   case tea.KeyMsg:
     switch msg.String() {
+    case ".", "t":
+      m.c.Control("go", "start")
     case "h", "left":
       m.c.Control("prev", "day")
     case "l", "right":
