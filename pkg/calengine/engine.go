@@ -92,10 +92,11 @@ func mergeHighlights(targetYear int, targetMonth int, days []string, highlights 
 
 func format(day int, highlights []string) (s string) {
   // If there is highlights, add them around the day string.
+  s += " "
   for _, hl := range highlights {
     s += hl
   }
-  s += fmt.Sprintf(" %2d", day)
+  s += fmt.Sprintf("%2d", day)
   for range highlights {
     s += N0
   }
