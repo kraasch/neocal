@@ -9,14 +9,8 @@ import (
 
 const (
   F1 = "\x1b[1;38;2;255;0;0m" // ANSI foreground color (= red).
-  B1 = "\x1b[38;5;56m"        // ANSI background color (= purple).
+  B1 = "\x1b[48;5;56m"        // ANSI background color (= purple).
   N0 = "\x1b[0m"              // ANSI clear formatting.
-  // TL = "┌" // top left corner.
-  // TR = "┐" // top right corner.
-  // BL = "└" // bottom left corner.
-  // BR = "┘" // bottom right corner.
-  // HO = "─" // horizontal line.
-  // VE = "│" // vertical line.
 )
 
 func parseYearAndMonth(in string) (out time.Time) {
@@ -51,8 +45,11 @@ func DateAsHeader(targetDate string) (layouted string) {
   return
 }
 
-func MonthAsCalendar(targetDate string, culture string) string {
-  return CMonthAsCalendar(targetDate, culture, "")
+// print month.
+func MonthAsCalendar(targetDate string, culture string) (s string) {
+  days := []string{}
+  hls  := []string{}
+  return hlMonthAsCalendar(targetDate, culture, days, hls)
 }
 
 // color day in month.
@@ -77,9 +74,14 @@ func mergeHighlights(targetYear int, targetMonth int, days []string, highlights 
   out := make(map[int][]string)
   if len(days) == len(highlights) {
     for i := range days {
-      y, _ := strconv.Atoi(days[i][:4])
-      m, _ := strconv.Atoi(days[i][5:7])
-      d, _ := strconv.Atoi(days[i][8:10])
+      // TODO: check for input to be of valid length of valid format.... maybe. Or use time.Parse() with layout.
+      y, erry := strconv.Atoi(days[i][:4])
+      m, errm := strconv.Atoi(days[i][5:7])
+      d, errd := strconv.Atoi(days[i][8:10])
+      if erry != nil || errm != nil || errd != nil {
+        _ = fmt.Errorf("Bad date conversion for days '%s': %#v, %#v, %#v", days, erry, errm, errd)
+        return out
+      }
       if y == targetYear && m == targetMonth {
         out[d] = append(out[d], highlights[i])
       }
@@ -88,27 +90,19 @@ func mergeHighlights(targetYear int, targetMonth int, days []string, highlights 
   return out
 }
 
-func format(day int, dayToHighlight string, highlight string) (s string) {
-  theDay := 0
-  if dayToHighlight != "" {
-    converted, err := strconv.Atoi(dayToHighlight)
-    if err != nil {
-      panic(err)
-    }
-    theDay = converted
-  }
-
-  if day == theDay {
-    s += highlight
+func format(day int, highlights []string) (s string) {
+  // If there is highlights, add them around the day string.
+  for _, hl := range highlights {
+    s += hl
   }
   s += fmt.Sprintf(" %2d", day)
-  if day == theDay {
+  for range highlights {
     s += N0
   }
   return
 }
 
-// highlight days in month (with explicity highlights).
+// highlight days in month (with explicit highlights).
 func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string) (s string) {
 
   // Get the first day of the target month.
@@ -149,8 +143,16 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
   daysInFirstWeek := (7 - weekday) % 7
 
   // Print the days of the month.
+  targetY := firstDayDate.Year()
+  targetM := int(firstDayDate.Month())
+  hlsForEachDay := mergeHighlights(targetY, targetM, daysToHl, highlights)
   for day := 1; day <= lastDay; day++ {
-    s += format(day, daysToHl[0], F1)
+    hlsForDay := hlsForEachDay[day]
+    if len(hlsForDay) > 0 {
+      s += format(day, hlsForDay)
+    } else {
+      s += fmt.Sprintf(" %2d", day)
+    }
     i := day - 1
     if (firstDay + i) % 7 == daysInFirstWeek {
       // Move to the next line after 7 days.

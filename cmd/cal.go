@@ -26,9 +26,10 @@ var (
 )
 
 type model struct {
-  width    int
-  height   int
-  c        ctrl.Controller
+  width     int
+  height    int
+  c         ctrl.Controller
+  startDate string
 }
 
 func (m model) Init() tea.Cmd {
@@ -71,7 +72,8 @@ func (m model) View() string {
     return ""
   }
   r   := m.c.ReadDateHuman() + "\n"
-  str := engine.CMonthAsCalendar(m.c.ReadDateYM(), "eu", m.c.ReadDateD())
+  bgDay := []string{m.startDate}
+  str := engine.HMonthAsCalendar(m.c.ReadDateYM(), "eu", m.c.ReadDate(), bgDay)
   r   += styleBox.Render(str)
   if verbose {
     bottomMsg := "\nQuit (q), move (hjkl)."
@@ -91,7 +93,7 @@ func main() {
   if !ok {
     return
   }
-  m := model{0, 0, cal}
+  m := model{0, 0, cal, cal.ReadDate()}
 
   // start bubbletea.
   if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
@@ -100,7 +102,7 @@ func main() {
   }
 
   // print the last highlighted value in calendar to stdout.
-  defer fmt.Println(m.c.ReadDate())
+  defer fmt.Println(m.startDate)
 
 } // fin.
 

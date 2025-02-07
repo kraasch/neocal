@@ -165,7 +165,7 @@ var suites = []TestSuite{
       {
         testName:       "color_february-with-28-days_eu_00",
         isMulti:        true,
-        inputArr:       []string{"2025-02", "eu", "15"},
+        inputArr:       []string{"2025-02", "eu", "2025-02-15"},
         expectedValue:
         " Mo Tu We Th Fr Sa Su " + NL +
         "                 1  2 " + NL +
@@ -179,7 +179,7 @@ var suites = []TestSuite{
       {
         testName:       "color_february-with-28-days_us_00",
         isMulti:        true,
-        inputArr:       []string{"2025-02", "us", "15"},
+        inputArr:       []string{"2025-02", "us", "2025-02-15"},
         expectedValue:
         " Su Mo Tu We Th Fr Sa " + NL +
         "                    1 " + NL +
