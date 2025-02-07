@@ -78,7 +78,7 @@ func (m model) View() string {
   str := engine.HMonthAsCalendar(m.c.ReadDateYM(), "eu", m.c.ReadDate(), bgDay)
   r   += styleBox.Render(str)
   if verbose {
-    bottomMsg := "\nQuit (q), move (hjkl)."
+    bottomMsg := "\nQuit (q), move (hjklt)."
     r += bottomMsg + "\n"
   }
   return lip.Place(m.width, m.height, lip.Center, lip.Center, r)
