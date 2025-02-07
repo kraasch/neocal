@@ -59,7 +59,7 @@ func MonthAsCalendar(targetDate string, culture string) string {
 func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) (s string) {
   days := []string{dayToHighlight}
   hls  := []string{F1}
-  return HlMonthAsCalendar(targetDate, culture, days, hls)
+  return hlMonthAsCalendar(targetDate, culture, days, hls)
 }
 
 // highlight days in month (without explicity highlights).
@@ -70,7 +70,22 @@ func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToB
     daysToHl = append(daysToHl, day)
     hls      = append(hls,      B1)
   }
-  return HlMonthAsCalendar(targetDate, culture, daysToHl, hls)
+  return hlMonthAsCalendar(targetDate, culture, daysToHl, hls)
+}
+
+func mergeHighlights(targetYear int, targetMonth int, days []string, highlights []string) map[int][]string {
+  out := make(map[int][]string)
+  if len(days) == len(highlights) {
+    for i := range days {
+      y, _ := strconv.Atoi(days[i][:4])
+      m, _ := strconv.Atoi(days[i][5:7])
+      d, _ := strconv.Atoi(days[i][8:10])
+      if y == targetYear && m == targetMonth {
+        out[d] = append(out[d], highlights[i])
+      }
+    }
+  }
+  return out
 }
 
 func format(day int, dayToHighlight string, highlight string) (s string) {
@@ -94,7 +109,7 @@ func format(day int, dayToHighlight string, highlight string) (s string) {
 }
 
 // highlight days in month (with explicity highlights).
-func HlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string) (s string) {
+func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string) (s string) {
 
   // Get the first day of the target month.
   firstDayDate := parseYearAndMonth(targetDate)
