@@ -32,14 +32,6 @@ type TestSuite struct {
 
 var suites = []TestSuite{
   /*
-  * Test for the function TEMPLATE().
-  */
-  {
-    nil,
-    []TestList{
-    },
-  },
-  /*
   * Test for the function DateAsHeader().
   */
   {
