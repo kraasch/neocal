@@ -145,6 +145,23 @@ var suites = []TestSuite{
         " 16 17 18 19 20 21 22 " + NL +
         " 23 24 25 26 27 28    ",
       },
+      {
+        testName:       "design_eu_month-ends-with-31-days_00",
+        isMulti:        true,
+        inputArr:       []string{"2026-05", "eu"},
+        expectedValue:
+        " Mo Tu We Th Fr Sa Su " + NL +
+        "              1  2  3 " + NL +
+        "  4  5  6  7  8  9 10 " + NL +
+        " 11 12 13 14 15 16 17 " + NL +
+        " 18 19 20 21 22 23 24 " + NL +
+        " 25 26 27 28 29 30 31 " + NL +
+        // " 25 26 27 28 29 30 31 ", // NOTE: see below.
+        "                      ",
+        // NOTE: this could also end without a new line.
+        // ie. " 25 26 27 28 29 30 31 " + NL,
+        // But even traditional CLI calendars print a line full of spaces here.
+      },
     },
   },
 
