@@ -65,6 +65,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
       m.c.Control("prev", "year")
     case "L", "pgdown":
       m.c.Control("next", "year")
+    case "Q":
+      suppress = true
+      return m, tea.Quit
     case "q":
       return m, tea.Quit
     }
