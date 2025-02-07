@@ -8,15 +8,15 @@ import (
 )
 
 const (
-  F1 = "\x1b[1;38;2;255;0;0m" // ANSI foreground color (text = red).
-  F2 = "\x1b[38;5;56m"        // ANSI foreground color (boxes = purple).
+  F1 = "\x1b[1;38;2;255;0;0m" // ANSI foreground color (= red).
+  B1 = "\x1b[38;5;56m"        // ANSI background color (= purple).
   N0 = "\x1b[0m"              // ANSI clear formatting.
-  TL = "┌" // top left corner.
-  TR = "┐" // top right corner.
-  BL = "└" // bottom left corner.
-  BR = "┘" // bottom right corner.
-  HO = "─" // horizontal line.
-  VE = "│" // vertical line.
+  // TL = "┌" // top left corner.
+  // TR = "┐" // top right corner.
+  // BL = "└" // bottom left corner.
+  // BR = "┘" // bottom right corner.
+  // HO = "─" // horizontal line.
+  // VE = "│" // vertical line.
 )
 
 func parseYearAndMonth(in string) (out time.Time) {
@@ -55,8 +55,28 @@ func MonthAsCalendar(targetDate string, culture string) string {
   return CMonthAsCalendar(targetDate, culture, "")
 }
 
+// color day in month.
 func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) (s string) {
+  days := []string{dayToHighlight}
+  hls  := []string{F1}
+  return HlMonthAsCalendar(targetDate, culture, days, hls)
+}
 
+// highlight days in month (without explicity highlights).
+func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToBg []string) (s string) {
+  daysToHl := []string{dayToFg}
+  hls      := []string{F1}
+  for _, day := range daysToBg {
+    daysToHl = append(daysToHl, day)
+    hls      = append(hls,      B1)
+  }
+  return HlMonthAsCalendar(targetDate, culture, daysToHl, hls)
+}
+
+// highlight days in month (with explicity highlights).
+func HlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string) (s string) {
+
+  dayToHighlight := daysToHl[0]
   today := 0
   if dayToHighlight != "" {
     converted, err := strconv.Atoi(dayToHighlight)

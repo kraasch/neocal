@@ -22,11 +22,12 @@ type TestList struct {
   testName          string
   isMulti           bool
   inputArr          []string
+  inputArr2         []string
   expectedValue     string
 }
 
 type TestSuite struct {
-  functionUnderTest func(...string) string
+  testingFunction   func(in TestList) string
   tests             []TestList
 }
 
@@ -35,13 +36,13 @@ var suites = []TestSuite{
   * Test for the function DateAsHeader().
   */
   {
-    functionUnderTest:
-    func(in ...string) (out string) {
-      targetDate := in[0]
+    testingFunction:
+    func(in TestList) (out string) {
+      targetDate := in.inputArr[0]
       out = DateAsHeader(targetDate)
       return
     },
-    tests: 
+    tests:
     []TestList{
       {
         testName:      "date-1-digit-day_leading-space_00",
@@ -57,18 +58,19 @@ var suites = []TestSuite{
       },
     },
   },
+
   /*
   * Test for the function MonthAsCalendar().
   */
   {
-    functionUnderTest:
-    func(in ...string) (out string) {
-      targetDate    := in[0]
-      formatCulture := in[1]
+    testingFunction:
+    func(in TestList) (out string) {
+      targetDate    := in.inputArr[0]
+      formatCulture := in.inputArr[1]
       out = MonthAsCalendar(targetDate, formatCulture)
       return
     },
-    tests: 
+    tests:
     []TestList{
       {
         testName:       "calendar_eu_week-starts-mid_00",
@@ -145,19 +147,20 @@ var suites = []TestSuite{
       },
     },
   },
+
   /*
   * Test for the function MonthAsCalendar().
   */
   {
-    functionUnderTest:
-    func(in ...string) (out string) {
-      targetDate    := in[0]
-      formatCulture := in[1]
-      dayInMonth    := in[2]
-      out = CMonthAsCalendar(targetDate, formatCulture, dayInMonth)
+    testingFunction:
+    func(in TestList) (out string) {
+      targetDate     := in.inputArr[0]
+      formatCulture  := in.inputArr[1]
+      dayToHighlight := in.inputArr[2]
+      out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight)
       return
     },
-    tests: 
+    tests:
     []TestList{
       {
         testName:       "color_february-with-28-days_eu_00",
@@ -188,6 +191,63 @@ var suites = []TestSuite{
       },
     },
   },
+
+  /*
+  * Test for the function MonthAsCalendar().
+  */
+  {
+    testingFunction:
+    func(in TestList) (out string) {
+      targetDate     := in.inputArr[0]
+      formatCulture  := in.inputArr[1]
+      dayToFg        := in.inputArr[2]
+      daysToBg       := in.inputArr2
+      out = HMonthAsCalendar(targetDate, formatCulture, dayToFg, daysToBg)
+      return
+    },
+    tests:
+    []TestList{
+      {
+        testName:       "highlight+color_eu_00",
+        isMulti:        true,
+        inputArr:       []string{"2025-02", "eu", "15"},
+        inputArr2:      []string{"2025-02-02", "2025-03-03"},
+        expectedValue:
+        " Mo Tu We Th Fr Sa Su " + NL +
+        "                 1"+B1+"  2"+N0+" " + NL +
+        "  3  4  5  6  7  8  9 " + NL +
+        " 10 11 12 13 14"+F1+" 15"+N0+" 16 " + NL +
+        " 17 18 19 20 21 22 23 " + NL +
+        " 24 25 26 27 28       ",
+      },
+      {
+        testName:       "highlight+color_eu_01",
+        isMulti:        true,
+        inputArr:       []string{"2025-02", "us", "14"},
+        inputArr2:      []string{"2025-02-27", "2025-02-28", "2025-03-01"},
+        expectedValue:
+        " Su Mo Tu We Th Fr Sa " + NL +
+        "                    1 " + NL +
+        "  2  3  4  5  6  7  8 " + NL +
+        "  9 10 11 12 13"+F1+" 14"+N0+" 15 " + NL +
+        " 16 17 18 19 20 21 22 " + NL +
+        " 23 24 25 26"+B1+" 27"+N0+""+B1+" 28"+N0+"    ",
+      },
+      {
+        testName:       "highlight+color_eu_02",
+        isMulti:        true,
+        inputArr:       []string{"2025-02", "eu", "15"},
+        inputArr2:      []string{"2025-02-15"},
+        expectedValue:
+        " Mo Tu We Th Fr Sa Su " + NL +
+        "                 1  2 " + NL +
+        "  3  4  5  6  7  8  9 " + NL +
+        " 10 11 12 13 14"+B1+F1+" 15"+N0+N0+" 16 " + NL +
+        " 17 18 19 20 21 22 23 " + NL +
+        " 24 25 26 27 28       ",
+      },
+    },
+  },
 }
 
 func TestAll(t *testing.T) {
@@ -196,7 +256,7 @@ func TestAll(t *testing.T) {
       name := test.testName
       t.Run(name, func(t *testing.T) {
         exp := test.expectedValue
-        got := suite.functionUnderTest(test.inputArr...)
+        got := suite.testingFunction(test)
         if exp != got {
           if test.isMulti {
             t.Errorf("In '%s':\n", name)
