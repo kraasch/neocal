@@ -17,8 +17,11 @@ import (
 )
 
 var (
+  // return value.
+  output = ""
   // flags.
   verbose = false
+  suppress = false
   // styles.
   styleBox = lip.NewStyle().
     BorderStyle(lip.NormalBorder()).
@@ -66,6 +69,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
       return m, tea.Quit
     }
   }
+  output = m.c.ReadDate() // update the return value.
   return m, cmd
 }
 
@@ -87,7 +91,8 @@ func (m model) View() string {
 func main() {
 
   // parse flags.
-  flag.BoolVar(&verbose, "verbose", false, "Show info")
+  flag.BoolVar(&verbose,  "verbose",  false, "Show info")
+  flag.BoolVar(&suppress, "suppress", false, "Silence output")
   flag.Parse()
 
   // init model.
@@ -96,6 +101,7 @@ func main() {
     return
   }
   m := model{0, 0, cal, cal.ReadDate()}
+  output = m.c.ReadDate() // initialize output value for CLI.
 
   // start bubbletea.
   if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
@@ -104,7 +110,9 @@ func main() {
   }
 
   // print the last highlighted value in calendar to stdout.
-  defer fmt.Println(m.c.ReadDate()) // TODO: fix me.
+  if !suppress {
+    fmt.Println(output)
+  }
 
 } // fin.
 
