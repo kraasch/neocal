@@ -46,17 +46,17 @@ func DateAsHeader(targetDate string) (layouted string) {
 }
 
 // print month.
-func MonthAsCalendar(targetDate string, culture string) (s string) {
+func MonthAsCalendar(targetDate, culture, fillStyle string) (s string) {
   days := []string{}
   hls  := []string{}
-  return hlMonthAsCalendar(targetDate, culture, days, hls)
+  return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle)
 }
 
 // color day in month.
 func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) (s string) {
   days := []string{dayToHighlight}
   hls  := []string{F1}
-  return hlMonthAsCalendar(targetDate, culture, days, hls)
+  return hlMonthAsCalendar(targetDate, culture, days, hls, "none")
 }
 
 // highlight days in month (without explicity highlights).
@@ -67,7 +67,7 @@ func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToB
     daysToHl = append(daysToHl, day)
     hls      = append(hls,      B1)
   }
-  return hlMonthAsCalendar(targetDate, culture, daysToHl, hls)
+  return hlMonthAsCalendar(targetDate, culture, daysToHl, hls, "none")
 }
 
 func mergeHighlights(targetYear int, targetMonth int, days []string, highlights []string) map[int][]string {
@@ -104,7 +104,13 @@ func format(day int, highlights []string) (s string) {
 }
 
 // highlight days in month (with explicit highlights).
-func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string) (s string) {
+func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string, fillStyle string) (s string) {
+
+  // check fill style.
+  if fillStyle != "none" && fillStyle != "line" {
+    {}
+    // TODO: throw tantrum.
+  }
 
   // Get the first day of the target month.
   firstDayDate := parseYearAndMonth(targetDate)
@@ -138,8 +144,16 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
   }
 
   // Print leading spaces for the
-  for i := 0; i < weekday; i++ {
-    s += "   "
+  {
+    lastDayOfLastMonth := firstDayDate.AddDate(0, 0, -1).Day() // previous month, last day.
+    for i := 0; i < weekday; i++ {
+      day := lastDayOfLastMonth - weekday + i + 1 // the last days of previous month which were part of this week.
+      if fillStyle == "none" {
+        s += "   "
+      } else if fillStyle == "line" {
+        s += fmt.Sprintf(" %2d", day)
+      }
+    }
   }
   daysInFirstWeek := (7 - weekday) % 7
 
@@ -163,10 +177,19 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
   }
 
   // Print trailing spaces.
-  for i := lastWeekday; i < 7; i++ {
-    s += "   "
+  {
+    day := 0
+    for i := lastWeekday; i < 7; i++ {
+      day++
+      if fillStyle == "none" {
+        s += "   "
+      } else if fillStyle == "line" {
+        s += fmt.Sprintf(" %2d", day)
+      }
+    }
   }
   s += " " // Add right side padding.
+
 
   return
 }

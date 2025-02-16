@@ -67,35 +67,12 @@ var suites = []TestSuite{
     func(in TestList) (out string) {
       targetDate    := in.inputArr[0]
       formatCulture := in.inputArr[1]
-      out = MonthAsCalendar(targetDate, formatCulture)
+      fillStyle     := "none"
+      out = MonthAsCalendar(targetDate, formatCulture, fillStyle)
       return
     },
     tests:
     []TestList{
-      {
-        testName:       "calendar_eu_week-starts-mid_00",
-        isMulti:        true,
-        inputArr:       []string{"2025-02", "eu"}, // start month with middle of week.
-        expectedValue:
-        " Mo Tu We Th Fr Sa Su " + NL +
-        "                 1  2 " + NL +
-        "  3  4  5  6  7  8  9 " + NL +
-        " 10 11 12 13 14 15 16 " + NL +
-        " 17 18 19 20 21 22 23 " + NL +
-        " 24 25 26 27 28       ",
-      },
-      {
-        testName:       "calendar_eu_week-starts-mon_00", // start month with first day of week.
-        isMulti:        true,
-        inputArr:       []string{"2003-09", "eu"},
-        expectedValue:
-        " Mo Tu We Th Fr Sa Su " + NL +
-        "  1  2  3  4  5  6  7 " + NL +
-        "  8  9 10 11 12 13 14 " + NL +
-        " 15 16 17 18 19 20 21 " + NL +
-        " 22 23 24 25 26 27 28 " + NL +
-        " 29 30                ",
-      },
       {
         testName:       "calendar_eu_week-starts-sun_00", // start month with last day of week.
         isMulti:        true,
@@ -297,6 +274,46 @@ var suites = []TestSuite{
         " 10 11 12 13 14 "+F1+B1+"15"+N0+N0+" 16 " + NL +
         " 17 18 19 20 21 22 23 " + NL +
         " 24 25 26 27 28       ",
+      },
+    },
+  },
+  /*
+  * Test for the function MonthAsCalendar().
+  */
+  {
+    testingFunction:
+    func(in TestList) (out string) {
+      targetDate     := in.inputArr[0]
+      formatCulture  := in.inputArr[1]
+      fillStyle      := in.inputArr[2]
+      out = MonthAsCalendar(targetDate, formatCulture, fillStyle)
+      return
+    },
+    tests:
+    []TestList{
+      {
+        testName:       "fill-calendar_eu_week-starts-mid_00",
+        isMulti:        true,
+        inputArr:       []string{"2025-02", "eu", "line"}, // start month with middle of week.
+        expectedValue:
+        " Mo Tu We Th Fr Sa Su " + NL +
+        " 27 28 29 30 31  1  2 " + NL +
+        "  3  4  5  6  7  8  9 " + NL +
+        " 10 11 12 13 14 15 16 " + NL +
+        " 17 18 19 20 21 22 23 " + NL +
+        " 24 25 26 27 28  1  2 ",
+      },
+      {
+        testName:       "fill-calendar_eu_week-starts-mon_00", // start month with first day of week.
+        isMulti:        true,
+        inputArr:       []string{"2003-09", "eu", "line"},
+        expectedValue:
+        " Mo Tu We Th Fr Sa Su " + NL +
+        "  1  2  3  4  5  6  7 " + NL +
+        "  8  9 10 11 12 13 14 " + NL +
+        " 15 16 17 18 19 20 21 " + NL +
+        " 22 23 24 25 26 27 28 " + NL +
+        " 29 30  1  2  3  4  5 ",
       },
     },
   },
