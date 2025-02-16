@@ -8,9 +8,10 @@ import (
 )
 
 const (
-  F1 = "\x1b[1;38;2;255;0;0m" // ANSI foreground color (= red).
-  B1 = "\x1b[48;5;56m"        // ANSI background color (= purple).
-  N0 = "\x1b[0m"              // ANSI clear formatting.
+  F1 = "\x1b[1;38;2;255;0;0m"     // ANSI foreground color (= red).
+  B1 = "\x1b[48;5;56m"            // ANSI background color (= purple).
+  N0 = "\x1b[0m"                  // ANSI clear formatting.
+  B2 = "\x1b[1;38;2;100;100;100m" // ANSI foreground color (= gray).
 )
 
 func parseYearAndMonth(in string) (out time.Time) {
@@ -53,21 +54,21 @@ func MonthAsCalendar(targetDate, culture, fillStyle string) (s string) {
 }
 
 // color day in month.
-func CMonthAsCalendar(targetDate string, culture string, dayToHighlight string) (s string) {
+func CMonthAsCalendar(targetDate, culture, dayToHighlight, fillStyle string) (s string) {
   days := []string{dayToHighlight}
   hls  := []string{F1}
-  return hlMonthAsCalendar(targetDate, culture, days, hls, "none")
+  return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle)
 }
 
-// highlight days in month (without explicity highlights).
-func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToBg []string) (s string) {
+// highlight days in month (without explicit highlights).
+func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToBg []string, fillStyle string) (s string) {
   daysToHl := []string{dayToFg}
   hls      := []string{F1}
   for _, day := range daysToBg {
     daysToHl = append(daysToHl, day)
     hls      = append(hls,      B1)
   }
-  return hlMonthAsCalendar(targetDate, culture, daysToHl, hls, "none")
+  return hlMonthAsCalendar(targetDate, culture, daysToHl, hls, fillStyle)
 }
 
 func mergeHighlights(targetYear int, targetMonth int, days []string, highlights []string) map[int][]string {
@@ -112,6 +113,9 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
     // TODO: throw tantrum.
   }
 
+  // check if color is used.
+  usesColor := len(highlights) > 0 // TODO: in future maybe use a separate flag.
+
   // Get the first day of the target month.
   firstDayDate := parseYearAndMonth(targetDate)
   firstDay := firstDayDate.Day()
@@ -148,10 +152,16 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
     lastDayOfLastMonth := firstDayDate.AddDate(0, 0, -1).Day() // previous month, last day.
     for i := 0; i < weekday; i++ {
       day := lastDayOfLastMonth - weekday + i + 1 // the last days of previous month which were part of this week.
+      if usesColor && fillStyle == "line" && i == 0 {
+        s += B2
+      }
       if fillStyle == "none" {
         s += "   "
       } else if fillStyle == "line" {
         s += fmt.Sprintf(" %2d", day)
+      }
+      if usesColor && fillStyle == "line" && i == weekday -1 {
+        s += N0
       }
     }
   }
@@ -181,10 +191,16 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
     day := 0
     for i := lastWeekday; i < 7; i++ {
       day++
+      if usesColor && fillStyle == "line" && i == lastWeekday {
+        s += B2
+      }
       if fillStyle == "none" {
         s += "   "
       } else if fillStyle == "line" {
         s += fmt.Sprintf(" %2d", day)
+      }
+      if usesColor && fillStyle == "line" && i == 6 {
+        s += N0
       }
     }
   }

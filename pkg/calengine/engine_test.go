@@ -151,7 +151,7 @@ var suites = []TestSuite{
       targetDate     := in.inputArr[0]
       formatCulture  := in.inputArr[1]
       dayToHighlight := in.inputArr[2]
-      out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight)
+      out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight, "none")
       return
     },
     tests:
@@ -231,7 +231,7 @@ var suites = []TestSuite{
       formatCulture  := in.inputArr[1]
       dayToFg        := in.inputArr[2]
       daysToBg       := in.inputArr2
-      out = HMonthAsCalendar(targetDate, formatCulture, dayToFg, daysToBg)
+      out = HMonthAsCalendar(targetDate, formatCulture, dayToFg, daysToBg, "none")
       return
     },
     tests:
@@ -277,6 +277,7 @@ var suites = []TestSuite{
       },
     },
   },
+
   /*
   * Test for the function MonthAsCalendar() and fill each week.
   */
@@ -341,7 +342,53 @@ var suites = []TestSuite{
       },
     },
   },
-}
+
+  /*
+  * Test for the function CMonthAsCalendar() and fill each week.
+  */
+  {
+    testingFunction:
+    func(in TestList) (out string) {
+      targetDate     := in.inputArr[0]
+      formatCulture  := in.inputArr[1]
+      dayToHighlight := in.inputArr[2]
+      fillStyle      := in.inputArr[3]
+      out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight, fillStyle)
+      return
+    },
+    tests:
+    []TestList{
+      {
+        testName:       "color_february-with-28-days_eu_00",
+        isMulti:        true,
+        inputArr:       []string{"2025-02", "eu", "2025-02-15", "line"},
+        expectedValue:
+        " Mo Tu We Th Fr Sa Su " + NL +
+   B2 + " 27 28 29 30 31" + N0 + "  1  2 " + NL +
+        "  3  4  5  6  7  8  9 " + NL +
+        " 10 11 12 13 14 " +
+                    F1 + "15" + N0 +
+                          " 16 " + NL +
+        " 17 18 19 20 21 22 23 " + NL +
+        " 24 25 26 27 28" + B2 + "  1  2" + N0 + " ",
+      },
+      {
+        testName:       "color_february-with-28-days_us_00",
+        isMulti:        true,
+        inputArr:       []string{"2025-02", "us", "2025-02-15", "line"},
+        expectedValue:
+        " Su Mo Tu We Th Fr Sa " + NL +
+   B2 + " 26 27 28 29 30 31" + N0 + "  1 " + NL +
+        "  2  3  4  5  6  7  8 " + NL +
+        "  9 10 11 12 13 14 " +
+                       F1 + "15" + N0 + " " + NL +
+        " 16 17 18 19 20 21 22 " + NL +
+        " 23 24 25 26 27 28" + B2 + "  1" + N0 + " ",
+      },
+    },
+  },
+
+} // Fin of test suite.
 
 func TestAll(t *testing.T) {
   for _, suite := range suites {

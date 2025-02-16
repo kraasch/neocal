@@ -82,7 +82,7 @@ func (m model) View() string {
   }
   r   := m.c.ReadDateHuman() + "\n"
   bgDay := []string{m.startDate}
-  str := engine.HMonthAsCalendar(m.c.ReadDateYM(), "eu", m.c.ReadDate(), bgDay)
+  str := engine.HMonthAsCalendar(m.c.ReadDateYM(), "eu", m.c.ReadDate(), bgDay, "line")
   r   += styleBox.Render(str)
   if verbose {
     bottomMsg := "\nQuit (q), move (hjklt)."
