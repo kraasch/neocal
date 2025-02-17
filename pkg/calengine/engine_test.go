@@ -68,7 +68,39 @@ var suites = []TestSuite{
       targetDate    := in.inputArr[0]
       formatCulture := in.inputArr[1]
       fillStyle     := "none"
-      out = MonthAsCalendar(targetDate, formatCulture, fillStyle)
+      formatStyle   := "weeks"
+      out = MonthAsCalendar(targetDate, formatCulture, fillStyle, formatStyle)
+      return
+    },
+    tests:
+    []TestList{
+      {
+        testName:       "calendar_eu_format-week-numbers_00",
+        isMulti:        true,
+        inputArr:       []string{"2024-12", "eu"},
+        expectedValue:
+        "  | Mo Tu We Th Fr Sa Su " + NL +
+        "48|                    1 " + NL +
+        "49|  2  3  4  5  6  7  8 " + NL +
+        "50|  9 10 11 12 13 14 15 " + NL +
+        "51| 16 17 18 19 20 21 22 " + NL +
+        "52| 23 24 25 26 27 28 29 " + NL +
+        "53| 30 31                ",
+      },
+    },
+  },
+
+  /*
+  * Test for the function MonthAsCalendar().
+  */
+  {
+    testingFunction:
+    func(in TestList) (out string) {
+      targetDate    := in.inputArr[0]
+      formatCulture := in.inputArr[1]
+      fillStyle     := "none"
+      formatStyle   := "none"
+      out = MonthAsCalendar(targetDate, formatCulture, fillStyle, formatStyle)
       return
     },
     tests:
@@ -287,7 +319,8 @@ var suites = []TestSuite{
       targetDate     := in.inputArr[0]
       formatCulture  := in.inputArr[1]
       fillStyle      := in.inputArr[2]
-      out = MonthAsCalendar(targetDate, formatCulture, fillStyle)
+      formatStyle    := "none"
+      out = MonthAsCalendar(targetDate, formatCulture, fillStyle, formatStyle)
       return
     },
     tests:

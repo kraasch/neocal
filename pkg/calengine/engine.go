@@ -47,17 +47,17 @@ func DateAsHeader(targetDate string) (layouted string) {
 }
 
 // print month.
-func MonthAsCalendar(targetDate, culture, fillStyle string) (s string) {
+func MonthAsCalendar(targetDate, culture, fillStyle, formatStyle string) (s string) {
   days := []string{}
   hls  := []string{}
-  return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle)
+  return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, formatStyle)
 }
 
 // color day in month.
 func CMonthAsCalendar(targetDate, culture, dayToHighlight, fillStyle string) (s string) {
   days := []string{dayToHighlight}
   hls  := []string{F1}
-  return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle)
+  return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, "none")
 }
 
 // highlight days in month (without explicit highlights).
@@ -68,7 +68,7 @@ func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToB
     daysToHl = append(daysToHl, day)
     hls      = append(hls,      B1)
   }
-  return hlMonthAsCalendar(targetDate, culture, daysToHl, hls, fillStyle)
+  return hlMonthAsCalendar(targetDate, culture, daysToHl, hls, fillStyle, "none")
 }
 
 func mergeHighlights(targetYear int, targetMonth int, days []string, highlights []string) map[int][]string {
@@ -105,10 +105,15 @@ func format(day int, highlights []string) (s string) {
 }
 
 // highlight days in month (with explicit highlights).
-func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string, fillStyle string) (s string) {
+func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string, fillStyle string, formatStyle string) (s string) {
 
   // check fill style.
   if fillStyle != "none" && fillStyle != "line" {
+    {}
+    // TODO: throw tantrum.
+  }
+  // check format style.
+  if fillStyle != "none" && fillStyle != "week" {
     {}
     // TODO: throw tantrum.
   }
