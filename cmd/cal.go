@@ -11,6 +11,9 @@ import (
   "os"
   "flag"
 
+  // other calculations.
+  "strings"
+
   // local packages.
   engine "github.com/kraasch/neocal/pkg/calengine"
   ctrl "github.com/kraasch/neocal/pkg/calcontroller"
@@ -83,6 +86,10 @@ func (m model) View() string {
   r   := m.c.ReadDateHuman() + "\n"
   bgDay := []string{m.startDate}
   str := engine.HMonthAsCalendar(m.c.ReadDateYM(), "eu", m.c.ReadDate(), bgDay, "line")
+  lines := strings.Split(str, "\n")
+  if len(lines) == 6 {
+    str += "\n"
+  }
   r   += styleBox.Render(str)
   if verbose {
     bottomMsg := "\nQuit (q), move (hjklt)."
