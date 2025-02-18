@@ -67,17 +67,17 @@ var suites = []TestSuite{
     func(in TestList) (out string) {
       targetDate    := in.inputArr[0]
       formatCulture := in.inputArr[1]
-      fillStyle     := "none"
-      formatStyle   := "weeks"
+      fillStyle     := in.inputArr[2]
+      formatStyle   := "week"
       out = MonthAsCalendar(targetDate, formatCulture, fillStyle, formatStyle)
       return
     },
     tests:
     []TestList{
       {
-        testName:       "calendar_eu_format-week-numbers_00",
+        testName:       "weeknums_calendar_eu_week-starts-sun_00", // start month with last day of week.
         isMulti:        true,
-        inputArr:       []string{"2024-12", "eu"},
+        inputArr:       []string{"2024-12", "eu", "none"},
         expectedValue:
         "  | Mo Tu We Th Fr Sa Su " + NL +
         "48|                    1 " + NL +
@@ -86,6 +86,67 @@ var suites = []TestSuite{
         "51| 16 17 18 19 20 21 22 " + NL +
         "52| 23 24 25 26 27 28 29 " + NL +
         "53| 30 31                ",
+      },
+      {
+        testName:       "weeknums_calendar_us_week-starts-mid_00", // start month with middle of week.
+        isMulti:        true,
+        inputArr:       []string{"2030-01", "us", "none"},
+        expectedValue:
+        "  | Su Mo Tu We Th Fr Sa " + NL +
+        " 1|        1  2  3  4  5 " + NL +
+        " 2|  6  7  8  9 10 11 12 " + NL +
+        " 3| 13 14 15 16 17 18 19 " + NL +
+        " 4| 20 21 22 23 24 25 26 " + NL +
+        " 5| 27 28 29 30 31       ",
+      },
+      {
+        testName:       "weeknums_calendar_us_week-starts-sun_00", // start month with first day of week.
+        isMulti:        true,
+        inputArr:       []string{"2024-12", "us", "none"},
+        expectedValue:
+        "  | Su Mo Tu We Th Fr Sa " + NL +
+        "49|  1  2  3  4  5  6  7 " + NL +
+        "50|  8  9 10 11 12 13 14 " + NL +
+        "51| 15 16 17 18 19 20 21 " + NL +
+        "52| 22 23 24 25 26 27 28 " + NL +
+        "53| 29 30 31             ",
+      },
+      {
+        testName:       "weeknums_calendar_us_week-starts-sat_00", // start month with last day of week.
+        isMulti:        true,
+        inputArr:       []string{"2025-02", "us", "none"},
+        expectedValue:
+        "  | Su Mo Tu We Th Fr Sa " + NL +
+        " 5|                    1 " + NL +
+        " 6|  2  3  4  5  6  7  8 " + NL +
+        " 7|  9 10 11 12 13 14 15 " + NL +
+        " 8| 16 17 18 19 20 21 22 " + NL +
+        " 9| 23 24 25 26 27 28    ",
+      },
+      {
+        testName:       "weeknums_calendar_eu_month-ends-with-sun_00",
+        isMulti:        true,
+        inputArr:       []string{"2026-05", "eu", "line"},
+        expectedValue:
+        "  | Mo Tu We Th Fr Sa Su " + NL +
+        "18| 27 28 29 30  1  2  3 " + NL +
+        "19|  4  5  6  7  8  9 10 " + NL +
+        "20| 11 12 13 14 15 16 17 " + NL +
+        "21| 18 19 20 21 22 23 24 " + NL +
+        "22| 25 26 27 28 29 30 31 " + NL +
+        "  |  1  2  3  4  5  6  7 ",
+      },
+      {
+        testName:       "weeknums_calendar_eu_month-ends-not-with-sun_00",
+        isMulti:        true,
+        inputArr:       []string{"2025-02", "eu", "line"},
+        expectedValue:
+        "  | Mo Tu We Th Fr Sa Su " + NL +
+        " 5| 27 28 29 30 31  1  2 " + NL +
+        " 6|  3  4  5  6  7  8  9 " + NL +
+        " 7| 10 11 12 13 14 15 16 " + NL +
+        " 8| 17 18 19 20 21 22 23 " + NL +
+        " 9| 24 25 26 27 28  1  2 ",
       },
     },
   },
@@ -183,7 +244,7 @@ var suites = []TestSuite{
       targetDate     := in.inputArr[0]
       formatCulture  := in.inputArr[1]
       dayToHighlight := in.inputArr[2]
-      out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight, "none")
+      out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight, "none", "none")
       return
     },
     tests:
@@ -263,7 +324,7 @@ var suites = []TestSuite{
       formatCulture  := in.inputArr[1]
       dayToFg        := in.inputArr[2]
       daysToBg       := in.inputArr2
-      out = HMonthAsCalendar(targetDate, formatCulture, dayToFg, daysToBg, "none")
+      out = HMonthAsCalendar(targetDate, formatCulture, dayToFg, daysToBg, "none", "none")
       return
     },
     tests:
@@ -386,7 +447,7 @@ var suites = []TestSuite{
       formatCulture  := in.inputArr[1]
       dayToHighlight := in.inputArr[2]
       fillStyle      := in.inputArr[3]
-      out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight, fillStyle)
+      out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight, fillStyle, "none")
       return
     },
     tests:

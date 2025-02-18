@@ -23,8 +23,10 @@ var (
   // return value.
   output = ""
   // flags.
-  verbose = false
+  weeks    = false
+  verbose  = false
   suppress = false
+  weeksString = "none"
   // styles.
   styleBox = lip.NewStyle().
     BorderStyle(lip.NormalBorder()).
@@ -85,7 +87,7 @@ func (m model) View() string {
   }
   r   := m.c.ReadDateHuman() + "\n"
   bgDay := []string{m.startDate}
-  str := engine.HMonthAsCalendar(m.c.ReadDateYM(), "eu", m.c.ReadDate(), bgDay, "line")
+  str := engine.HMonthAsCalendar(m.c.ReadDateYM(), "eu", m.c.ReadDate(), bgDay, "line", weeksString)
   lines := strings.Split(str, "\n")
   if len(lines) == 6 {
     str += "\n"
@@ -101,9 +103,14 @@ func (m model) View() string {
 func main() {
 
   // parse flags.
+  flag.BoolVar(&weeks,    "weeks",    false, "Number of week in year")
   flag.BoolVar(&verbose,  "verbose",  false, "Show info")
   flag.BoolVar(&suppress, "suppress", false, "Silence output")
   flag.Parse()
+  // read week flag.
+  if weeks {
+    weeksString = "week"
+  }
 
   // init model.
   cal, ok := ctrl.NewCalNow()

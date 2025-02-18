@@ -54,21 +54,21 @@ func MonthAsCalendar(targetDate, culture, fillStyle, formatStyle string) (s stri
 }
 
 // color day in month.
-func CMonthAsCalendar(targetDate, culture, dayToHighlight, fillStyle string) (s string) {
+func CMonthAsCalendar(targetDate, culture, dayToHighlight, fillStyle, formatStyle string) (s string) {
   days := []string{dayToHighlight}
   hls  := []string{F1}
-  return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, "none")
+  return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, formatStyle)
 }
 
 // highlight days in month (without explicit highlights).
-func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToBg []string, fillStyle string) (s string) {
+func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToBg []string, fillStyle string, formatStyle string) (s string) {
   daysToHl := []string{dayToFg}
   hls      := []string{F1}
   for _, day := range daysToBg {
     daysToHl = append(daysToHl, day)
     hls      = append(hls,      B1)
   }
-  return hlMonthAsCalendar(targetDate, culture, daysToHl, hls, fillStyle, "none")
+  return hlMonthAsCalendar(targetDate, culture, daysToHl, hls, fillStyle, formatStyle)
 }
 
 func mergeHighlights(targetYear int, targetMonth int, days []string, highlights []string) map[int][]string {
@@ -92,7 +92,7 @@ func mergeHighlights(targetYear int, targetMonth int, days []string, highlights 
 }
 
 func format(day int, highlights []string) (s string) {
-  // If there is highlights, add them around the day string.
+  // if there is highlights, add them around the day string.
   s += " "
   for _, hl := range highlights {
     s += hl
@@ -113,7 +113,7 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
     // TODO: throw tantrum.
   }
   // check format style.
-  if fillStyle != "none" && fillStyle != "week" {
+  if formatStyle != "none" && formatStyle != "week" {
     {}
     // TODO: throw tantrum.
   }
@@ -121,11 +121,11 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
   // check if color is used.
   usesColor := len(highlights) > 0 // TODO: in future maybe use a separate flag.
 
-  // Get the first day of the target month.
+  // get the first day of the target month.
   firstDayDate := parseYearAndMonth(targetDate)
   firstDay := firstDayDate.Day()
 
-  // Get the total number of days in the month.
+  // get the total number of days in the month.
   lastDayDate := firstDayDate.AddDate(0, 1, -1)
   lastDay := lastDayDate.Day()
   lastWeekday := int(lastDayDate.Weekday())
@@ -135,7 +135,7 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
     lastWeekday = (lastWeekday + 1) % 7
   }
 
-  // Get the weekday of the first day in the month.
+  // get the weekday of the first day in the month.
   // US format, week starts with Sunday:
   // 0=sun 1=mon 2=tue 3=wed 4=thu 5=fri 6=sat.
   weekday := int(firstDayDate.Weekday())
@@ -145,17 +145,39 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
     weekday = (weekday + 6) % 7
   }
 
-  // Add the header (day names).
-  if culture == "us" {
-    s += fmt.Sprintln(" Su Mo Tu We Th Fr Sa ")
+  // ISO weeks seem to start with Monday, but Go weekdays seem to start with sunday (=0).
+    weekNum := 0
+  if weekday != 0 { // week does not start with sunday.
+    _, weekNum = firstDayDate.ISOWeek()
   } else {
-    s += fmt.Sprintln(" Mo Tu We Th Fr Sa Su ")
+    // week does start with sunday, thus add 1 day to go to monday.
+    // otherwise iso date returns number of previous week.
+    _, weekNum = firstDayDate.AddDate(0, 0, 1).ISOWeek()
   }
 
-  // Print leading spaces for the
+  // add the header (day names).
+  if culture == "us" {
+    if formatStyle == "week" {
+      s += fmt.Sprintln("  | Su Mo Tu We Th Fr Sa ")
+    } else {
+      s += fmt.Sprintln(" Su Mo Tu We Th Fr Sa ")
+    }
+  } else {
+    if formatStyle == "week" {
+      s += fmt.Sprintln("  | Mo Tu We Th Fr Sa Su ")
+    } else {
+      s += fmt.Sprintln(" Mo Tu We Th Fr Sa Su ")
+    }
+  }
+
+  // print leading spaces for first week.
   {
     lastDayOfLastMonth := firstDayDate.AddDate(0, 0, -1).Day() // previous month, last day.
     for i := 0; i < weekday; i++ {
+      if i == 0 && formatStyle == "week" {
+        s += fmt.Sprintf("%2d|", weekNum)
+        weekNum++
+      }
       day := lastDayOfLastMonth - weekday + i + 1 // the last days of previous month which were part of this week.
       if usesColor && fillStyle == "line" && i == 0 {
         s += B2
@@ -172,30 +194,38 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
   }
   daysInFirstWeek := (7 - weekday) % 7
 
-  // Print the days of the month.
+  // print the days of the month.
   targetY := firstDayDate.Year()
   targetM := int(firstDayDate.Month())
   hlsForEachDay := mergeHighlights(targetY, targetM, daysToHl, highlights)
   for day := 1; day <= lastDay; day++ {
+    // add left side week number.
+    if (firstDay + day + 5) % 7 == daysInFirstWeek && formatStyle == "week" {
+      s += fmt.Sprintf("%2d|", weekNum)
+      weekNum++
+    }
+    // add days.
     hlsForDay := hlsForEachDay[day]
     if len(hlsForDay) > 0 {
       s += format(day, hlsForDay)
     } else {
       s += fmt.Sprintf(" %2d", day)
     }
-    i := day - 1
-    if (firstDay + i) % 7 == daysInFirstWeek {
-      // Move to the next line after 7 days.
-      s += " " // Add right side padding.
+    if (firstDay + day - 1) % 7 == daysInFirstWeek {
+      // move to the next line after 7 days.
+      s += " " // add right side padding.
       s += fmt.Sprintln()
     }
   }
 
-  // Print trailing spaces.
+  // print trailing spaces.
   {
     day := 0
     for i := lastWeekday; i < 7; i++ {
       day++
+      if i == lastWeekday && lastWeekday == 0 && formatStyle == "week" {
+        s += "  |"
+      }
       if usesColor && fillStyle == "line" && i == lastWeekday {
         s += B2
       }
@@ -209,7 +239,7 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
       }
     }
   }
-  s += " " // Add right side padding.
+  s += " " // add right side padding.
 
 
   return
