@@ -8,6 +8,11 @@ Similar to `cal`, `ncal`, etc.
   <img src="./resources/example.png" width="300"/>
 </p>
 
+Demo:
+<p align="center">
+  <img src="./resources/demo.gif" width="300"/>
+</p>
+
 ## to-dos
 
  - [ ] test for negative years, eg year -1 (do not let user navigate into pre-historic past).
