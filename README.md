@@ -13,24 +13,29 @@ Demo:
   <img src="./resources/demo.gif" width="300"/>
 </p>
 
-## to-dos
+## tasks
 
- - [ ] test for negative years, eg year -1 (do not let user navigate into pre-historic past).
- - [ ] test for 5-digit years, eg year 10000 (do not let user navigate in post-historic future).
- - [ ] auto-update GUI when next day came.
- - [ ] extract the calendar array into the model.
+  - [ ] make calendar pipeable
+    - eg. `selectedDate=$(neocal)`
+    - eg. `neocal | (read x; echo "$x")`
+  - [ ] give option to restrict selection to a list of date ranges.
+    - eg. `-restrict '2022-01-01=2022-02-01,2020-01-01=2020-02-01'` only allows selections in Jan 2020 or 2022.
+  - [ ] auto-update GUI when next day came.
 
 Later/maybe:
 
- - [ ] have interactive events.
-   - [ ] let user associated input forms with certain days of the calendar.
-   - [ ] show interactive events on days (eg blue font highlight).
-   - [ ] activate interactive events with special key (eg enter/space).
- - [ ] have script events.
-   - [ ] let user associated script with certain days of the calendar.
-   - [ ] show script events on days (eg blue font highlight).
-   - [ ] activate script events with special key (eg enter/space).
-   - [ ] run the associated script.
+  - [ ] tests for most extreme dates
+    - [ ] test for negative years, eg year -1 (do not let user navigate into pre-historic past).
+    - [ ] test for 5-digit years, eg year 10000 (do not let user navigate in post-historic future).
+  - [ ] have interactive events.
+    - [ ] let user associated input forms with certain days of the calendar.
+    - [ ] show interactive events on days (eg blue font highlight).
+    - [ ] activate interactive events with special key (eg enter/space).
+  - [ ] have script events.
+    - [ ] let user associated script with certain days of the calendar.
+    - [ ] show script events on days (eg blue font highlight).
+    - [ ] activate script events with special key (eg enter/space).
+    - [ ] run the associated script.
 
 ## done
 
