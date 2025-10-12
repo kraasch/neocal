@@ -25,6 +25,7 @@ Can also show three months at a time (flag `--three`).
   - [ ] implement a 3-month view which includes the month names on the left (as shown the example below).
   - [ ] provide a flag for colorless output.
   - [ ] do major refactor and clean up complicated function signatures.
+  - [ ] remove all ansii after every printed line in order to make embeddable into other projects.
   - [ ] make calendar pipeable
     - eg. `selectedDate=$(neocal)`
     - eg. `neocal | (read x; echo "$x")`

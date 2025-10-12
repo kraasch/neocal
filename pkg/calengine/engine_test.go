@@ -338,7 +338,7 @@ var suites = []TestSuite{
 			formatCulture := in.inputArr[1]
 			dayToFg := in.inputArr[2]
 			daysToBg := in.inputArr2
-			out = HMonthAsCalendar(targetDate, formatCulture, dayToFg, daysToBg, "none", "none", false)
+			out = HMonthAsCalendar(targetDate, formatCulture, dayToFg, daysToBg, "none", "none", "simple")
 			return out
 		},
 		tests: []TestList{

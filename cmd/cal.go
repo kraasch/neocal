@@ -88,7 +88,7 @@ func (m model) View() string {
 	bgDay := []string{m.startDate}
 	str := ""
 	if !three {
-		str = engine.HMonthAsCalendar(m.c.ReadDateYM(), styleEuUs, m.c.ReadDate(), bgDay, "line", weeksString, false)
+		str = engine.HMonthAsCalendar(m.c.ReadDateYM(), styleEuUs, m.c.ReadDate(), bgDay, "line", weeksString, "simple")
 	} else {
 		str = engine.ThreeMonthAsCalendar(m.c.ReadDateYM(), styleEuUs, m.c.ReadDate(), bgDay, weeksString)
 	}
