@@ -19,7 +19,7 @@ The calendar can be navigated interactively.
 Can also show three months at a time (flag `--three`).
 
 <p align="center">
-  <img src="./resources/three.png" width="100"/>
+  <img src="./resources/three.png" width="200"/>
 </p>
 
 ## tasks
