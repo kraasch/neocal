@@ -3,6 +3,7 @@ package calengine
 import (
 
 	// this is a test.
+	"regexp"
 	"testing"
 
 	// printing and formatting.
@@ -12,8 +13,6 @@ import (
 	// other imports.
 	"github.com/kraasch/godiff/godiff"
 )
-
-var NL = fmt.Sprintln()
 
 type TestList struct {
 	testName      string
@@ -28,6 +27,12 @@ type TestSuite struct {
 	tests           []TestList
 }
 
+func removeAnsii(input string) string {
+	// Regular expression to match ANSI escape sequences
+	re := regexp.MustCompile(`\x1b\[[0-9;?]*[A-Za-z]`)
+	return re.ReplaceAllString(input, "")
+}
+
 var suites = []TestSuite{
 	/*
 	 * Test for the function DateAsHeader().
@@ -36,7 +41,7 @@ var suites = []TestSuite{
 		testingFunction: func(in TestList) (out string) {
 			targetDate := in.inputArr[0]
 			out = DateAsHeader(targetDate)
-			return
+			return out
 		},
 		tests: []TestList{
 			{
@@ -60,17 +65,18 @@ var suites = []TestSuite{
 	{
 		testingFunction: func(in TestList) (out string) {
 			targetDate := in.inputArr[0]
+			hlDay := targetDate + "-01"
 			formatCulture := in.inputArr[1]
-			fillStyle := in.inputArr[2]
 			formatStyle := "week"
-			out = ThreeMonthAsCalendar(targetDate, formatCulture, fillStyle, formatStyle)
-			return
+			out = ThreeMonthAsCalendar(targetDate, formatCulture, hlDay, []string{}, formatStyle)
+			out = removeAnsii(out)
+			return out
 		},
 		tests: []TestList{
 			{
 				testName: "three_calendar_eu_week-starts-sun_00", // start month with last day of week.
 				isMulti:  true,
-				inputArr: []string{"2024-12", "eu", "none"},
+				inputArr: []string{"2024-12", "eu"},
 				expectedValue: "  | Mo Tu We Th Fr Sa Su " + NL +
 					"44| 28 29 30 31  1  2  3 " + NL +
 					"45|  4  5  6  7  8  9 10 " + NL +
@@ -100,7 +106,7 @@ var suites = []TestSuite{
 			fillStyle := in.inputArr[2]
 			formatStyle := "week"
 			out = MonthAsCalendar(targetDate, formatCulture, fillStyle, formatStyle)
-			return
+			return out
 		},
 		tests: []TestList{
 			{
@@ -184,7 +190,7 @@ var suites = []TestSuite{
 			fillStyle := "none"
 			formatStyle := "none"
 			out = MonthAsCalendar(targetDate, formatCulture, fillStyle, formatStyle)
-			return
+			return out
 		},
 		tests: []TestList{
 			{
@@ -260,7 +266,7 @@ var suites = []TestSuite{
 			formatCulture := in.inputArr[1]
 			dayToHighlight := in.inputArr[2]
 			out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight, "none", "none")
-			return
+			return out
 		},
 		tests: []TestList{
 			{
@@ -308,7 +314,7 @@ var suites = []TestSuite{
 			out += "17 => " + strings.Join(highlightMap[17], ", ") + "." + NL
 			out += fmt.Sprintf("22 => %s\n", highlightMap[22])
 
-			return
+			return out
 		},
 		tests: []TestList{
 			{
@@ -332,8 +338,8 @@ var suites = []TestSuite{
 			formatCulture := in.inputArr[1]
 			dayToFg := in.inputArr[2]
 			daysToBg := in.inputArr2
-			out = HMonthAsCalendar(targetDate, formatCulture, dayToFg, daysToBg, "none", "none")
-			return
+			out = HMonthAsCalendar(targetDate, formatCulture, dayToFg, daysToBg, "none", "none", false)
+			return out
 		},
 		tests: []TestList{
 			{
@@ -385,7 +391,7 @@ var suites = []TestSuite{
 			fillStyle := in.inputArr[2]
 			formatStyle := "none"
 			out = MonthAsCalendar(targetDate, formatCulture, fillStyle, formatStyle)
-			return
+			return out
 		},
 		tests: []TestList{
 			{
@@ -445,7 +451,7 @@ var suites = []TestSuite{
 			dayToHighlight := in.inputArr[2]
 			fillStyle := in.inputArr[3]
 			out = CMonthAsCalendar(targetDate, formatCulture, dayToHighlight, fillStyle, "none")
-			return
+			return out
 		},
 		tests: []TestList{
 			{

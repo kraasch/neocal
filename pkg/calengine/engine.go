@@ -3,15 +3,19 @@ package calengine
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 )
 
 const (
-	F1 = "\x1b[1;38;2;255;0;0m"     // ANSI foreground color (= red).
-	B1 = "\x1b[48;5;56m"            // ANSI background color (= purple).
-	N0 = "\x1b[0m"                  // ANSI clear formatting.
-	B2 = "\x1b[1;38;2;100;100;100m" // ANSI foreground color (= gray).
+	F1   = "\x1b[1;38;2;255;0;0m"     // ANSI foreground color (= red).
+	B1   = "\x1b[48;5;56m"            // ANSI background color (= purple).
+	N0   = "\x1b[0m"                  // ANSI clear formatting.
+	B2   = "\x1b[1;38;2;100;100;100m" // ANSI foreground color (= gray).
+	GRAY = B2
 )
+
+var NL = fmt.Sprintln()
 
 func parseYearAndMonth(in string) (out time.Time) {
 	const layout = "2006-01"
@@ -20,7 +24,7 @@ func parseYearAndMonth(in string) (out time.Time) {
 		fmt.Println("Error parsing date:", err)
 	}
 	out = parsedDate
-	return
+	return out
 }
 
 func parseTime(in string) (out time.Time) {
@@ -30,7 +34,7 @@ func parseTime(in string) (out time.Time) {
 		fmt.Println("Error parsing date:", err)
 	}
 	out = parsedDate
-	return
+	return out
 }
 
 func DateAsHeader(targetDate string) (layouted string) {
@@ -42,20 +46,26 @@ func DateAsHeader(targetDate string) (layouted string) {
 		d = " " + d
 	}
 	layouted = d + ". " + m + ", " + y
-	return
+	return layouted
+}
+
+// addMonthToDateStr converts dateStr to a date with only year+month, then adds numMon amount of month too it (while numMon can be negative or postive).
+func addMonthToDateStr(dateStr string, numMon int) string {
+	yearAndMonth := parseYearAndMonth(dateStr)
+	yearAndMonth = yearAndMonth.AddDate(0, numMon, 0)
+	return yearAndMonth.Format("2006-01")
 }
 
 // print three months.
-func ThreeMonthAsCalendar(targetDate, culture, fillStyle, formatStyle string) (s string) {
+func ThreeMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToBg []string, formatStyle string) (s string) {
+	diableHighlights := true // disables the interpretation of days and hls.
 	days := []string{}
 	hls := []string{}
-	a := hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, formatStyle) // TODO: remove everything after first day of month.
-	b := hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, formatStyle) // TODO: remove header, remove everything after first day of month and before last day of month,
-	c := hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, formatStyle) // TODO: remove header, remove everything after first day of month.
-	NL := "\n"                                                                     // TODO: remove hard-coded new line (make system-indepentend).
-	// TODO: in hlMonthAsCalendar() pass an option for removing header '  | Mo Tu We Th Fr Sa Su'
-	// TODO: in hlMonthAsCalendar() pass an option for omitting everything after last day of month, ie not adding spaces after last day, ie '|53| 30 31' instead of '|53| 30 31             '.
-	// TODO: in hlMonthAsCalendar() pass an option for omitting everything before first day of month, ie not adding spaces befor first day, ie ' 1' instead of '48|                    1'.
+	a := hlMonthAsCalendar(addMonthToDateStr(targetDate, -1), culture, days, hls, "line", formatStyle, false, diableHighlights)
+	b := HMonthAsCalendar(targetDate, culture, dayToFg, daysToBg, "line", formatStyle, true)
+	c := hlMonthAsCalendar(addMonthToDateStr(targetDate, +1), culture, days, hls, "line", formatStyle, true, diableHighlights)
+	// TODO: in hlMonthAsCalendar() pass an option for omitting everything after last day of month, ie not adding spaces after last day, ie '|53| 30 31' instead of '|53| 30 31             '. // TODO: remove this comment later.
+	// TODO: in hlMonthAsCalendar() pass an option for omitting everything before first day of month, ie not adding spaces befor first day, ie ' 1' instead of '48|                    1'. // TODO: remove this comment later.
 	return a + NL + b + NL + c
 }
 
@@ -63,25 +73,25 @@ func ThreeMonthAsCalendar(targetDate, culture, fillStyle, formatStyle string) (s
 func MonthAsCalendar(targetDate, culture, fillStyle, formatStyle string) (s string) {
 	days := []string{}
 	hls := []string{}
-	return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, formatStyle)
+	return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, formatStyle, false, false)
 }
 
 // color day in month.
 func CMonthAsCalendar(targetDate, culture, dayToHighlight, fillStyle, formatStyle string) (s string) {
 	days := []string{dayToHighlight}
 	hls := []string{F1}
-	return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, formatStyle)
+	return hlMonthAsCalendar(targetDate, culture, days, hls, fillStyle, formatStyle, false, false)
 }
 
 // highlight days in month (without explicit highlights).
-func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToBg []string, fillStyle string, formatStyle string) (s string) {
+func HMonthAsCalendar(targetDate string, culture string, dayToFg string, daysToBg []string, fillStyle string, formatStyle string, hideHeader bool) (s string) {
 	daysToHl := []string{dayToFg}
 	hls := []string{F1}
 	for _, day := range daysToBg {
 		daysToHl = append(daysToHl, day)
 		hls = append(hls, B1)
 	}
-	return hlMonthAsCalendar(targetDate, culture, daysToHl, hls, fillStyle, formatStyle)
+	return hlMonthAsCalendar(targetDate, culture, daysToHl, hls, fillStyle, formatStyle, hideHeader, false)
 }
 
 func mergeHighlights(targetYear int, targetMonth int, days []string, highlights []string) map[int][]string {
@@ -114,11 +124,11 @@ func format(day int, highlights []string) (s string) {
 	for range highlights {
 		s += N0
 	}
-	return
+	return s
 }
 
 // highlight days in month (with explicit highlights).
-func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string, fillStyle string, formatStyle string) (s string) {
+func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, highlights []string, fillStyle string, formatStyle string, hideHeader bool, disableHls bool) (s string) {
 	// check fill style.
 	if fillStyle != "none" && fillStyle != "line" {
 		{
@@ -170,17 +180,19 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
 	}
 
 	// add the header (day names).
-	if culture == "us" {
-		if formatStyle == "week" {
-			s += fmt.Sprintln("  | Su Mo Tu We Th Fr Sa ")
+	if !hideHeader {
+		if culture == "us" {
+			if formatStyle == "week" {
+				s += fmt.Sprintln("  | Su Mo Tu We Th Fr Sa ")
+			} else {
+				s += fmt.Sprintln(" Su Mo Tu We Th Fr Sa ")
+			}
 		} else {
-			s += fmt.Sprintln(" Su Mo Tu We Th Fr Sa ")
-		}
-	} else {
-		if formatStyle == "week" {
-			s += fmt.Sprintln("  | Mo Tu We Th Fr Sa Su ")
-		} else {
-			s += fmt.Sprintln(" Mo Tu We Th Fr Sa Su ")
+			if formatStyle == "week" {
+				s += fmt.Sprintln("  | Mo Tu We Th Fr Sa Su ")
+			} else {
+				s += fmt.Sprintln(" Mo Tu We Th Fr Sa Su ")
+			}
 		}
 	}
 
@@ -220,10 +232,14 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
 		}
 		// add days.
 		hlsForDay := hlsForEachDay[day]
-		if len(hlsForDay) > 0 {
-			s += format(day, hlsForDay)
-		} else {
-			s += fmt.Sprintf(" %2d", day)
+		if !disableHls {
+			if len(hlsForDay) > 0 {
+				s += format(day, hlsForDay)
+			} else {
+				s += fmt.Sprintf(" %2d", day)
+			}
+		} else { // if no highlights are on, then make everything gray.
+			s += format(day, []string{GRAY})
 		}
 		if (firstDay+day-1)%7 == daysInFirstWeek {
 			// move to the next line after 7 days.
@@ -255,5 +271,17 @@ func hlMonthAsCalendar(targetDate string, culture string, daysToHl []string, hig
 	}
 	s += " " // add right side padding.
 
-	return
+	if hideHeader {
+		s = removeFirstLine(s)
+	}
+
+	return s
+}
+
+func removeFirstLine(s string) string {
+	lines := strings.Split(s, NL)
+	if len(lines) <= 1 {
+		return ""
+	}
+	return strings.Join(lines[1:], NL)
 }
