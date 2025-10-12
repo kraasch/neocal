@@ -8,8 +8,6 @@ Similar to `cal`, `ncal`, etc.
   <img src="./resources/example.png" width="300"/>
 </p>
 
-Demo:
-
 The calendar can be navigated interactively.
 
 <p align="center">
